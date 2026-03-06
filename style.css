@@ -649,3 +649,21 @@ a {
 .guide-close:hover {
   background: #000;
 }
+.guide-open {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #1f2e3d;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  display: none;
+  z-index: 50;
+}
+
+.guide-open.visible {
+  display: block;
+}
