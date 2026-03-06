@@ -7,7 +7,7 @@ const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
 const sections = [
   {
     id: "historien",
-    text: "Her er reisen min i korte trekk — fra Sørlandet til ledelse og selskapsbygging."
+    text: "Her er reisen min i korte trekk."
   },
   {
     id: "resultater",
