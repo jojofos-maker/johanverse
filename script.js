@@ -1,10 +1,8 @@
-const bubble = document.getElementById("speechBubble");
+const stickyGuide = document.getElementById("stickyGuide");
+const stickyBubble = document.getElementById("stickyGuideBubble");
+const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
 
 const sections = [
-  {
-    id: "top",
-    text: "Hei! 👋 Scroll ned så skal jeg fortelle historien min."
-  },
   {
     id: "historien",
     text: "Her er reisen min i korte trekk — fra Sørlandet til ledelse og selskapsbygging."
@@ -23,27 +21,54 @@ const sections = [
   }
 ];
 
-function updateSpeechBubble() {
-  let currentText = sections[0].text;
+function setActiveMenu(sectionId) {
+  menuLinks.forEach((link) => {
+    const target = link.getAttribute("href").replace("#", "");
+    if (target === sectionId) {
+      link.classList.add("active");
+    } else {
+      link.classList.remove("active");
+    }
+  });
+}
+
+function updateGuide() {
+  const scrollY = window.scrollY;
+
+  if (scrollY > 220) {
+    stickyGuide?.classList.add("visible");
+  } else {
+    stickyGuide?.classList.remove("visible");
+  }
+
+  let currentText = "Hei! Jeg følger deg nedover siden.";
+  let currentSection = "";
 
   for (const section of sections) {
     const el = document.getElementById(section.id);
     if (!el) continue;
 
     const rect = el.getBoundingClientRect();
-    if (rect.top <= window.innerHeight * 0.35) {
+    if (rect.top <= window.innerHeight * 0.45) {
       currentText = section.text;
+      currentSection = section.id;
     }
   }
 
-  if (bubble && bubble.textContent !== currentText) {
-    bubble.style.opacity = "0";
-    bubble.style.transform = "translateY(10px)";
+  if (stickyBubble && stickyBubble.textContent !== currentText) {
+    stickyBubble.style.opacity = "0";
+    stickyBubble.style.transform = "translateY(8px)";
     setTimeout(() => {
-      bubble.textContent = currentText;
-      bubble.style.opacity = "1";
-      bubble.style.transform = "translateY(0)";
-    }, 180);
+      stickyBubble.textContent = currentText;
+      stickyBubble.style.opacity = "1";
+      stickyBubble.style.transform = "translateY(0)";
+    }, 150);
+  }
+
+  if (currentSection) {
+    setActiveMenu(currentSection);
+  } else {
+    menuLinks.forEach((link) => link.classList.remove("active"));
   }
 }
 
@@ -56,5 +81,6 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   });
 });
 
-window.addEventListener("scroll", updateSpeechBubble);
-window.addEventListener("load", updateSpeechBubble);
+window.addEventListener("scroll", updateGuide);
+window.addEventListener("load", updateGuide);
+window.addEventListener("resize", updateGuide);
