@@ -667,3 +667,72 @@ a {
 .guide-open.visible {
   display: block;
 }
+.journey-list {
+  display: grid;
+  gap: 36px;
+  margin-top: 28px;
+}
+
+.journey-item {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 26px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(24, 40, 59, 0.08);
+  border-radius: 24px;
+  padding: 22px;
+}
+
+.journey-item.reverse {
+  grid-template-columns: 0.95fr 1.05fr;
+}
+
+.journey-item.reverse .journey-image {
+  order: 2;
+}
+
+.journey-item.reverse .journey-copy {
+  order: 1;
+}
+
+.journey-image img {
+  width: 100%;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(24, 40, 59, 0.08);
+}
+
+.journey-kicker {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.journey-copy h3 {
+  margin: 0 0 10px;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  letter-spacing: -0.03em;
+}
+
+.journey-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 960px) {
+  .journey-item,
+  .journey-item.reverse {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-item.reverse .journey-image,
+  .journey-item.reverse .journey-copy {
+    order: initial;
+  }
+}
