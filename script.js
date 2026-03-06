@@ -1,3 +1,4 @@
+const guideOpen = document.getElementById("guideOpen");
 const guideClose = document.getElementById("guideClose");
 const stickyGuide = document.getElementById("stickyGuide");
 const stickyBubble = document.getElementById("stickyGuideBubble");
@@ -92,4 +93,20 @@ if (localStorage.getItem("guideClosed") === "true") {
 guideClose?.addEventListener("click", () => {
   stickyGuide.style.display = "none";
   localStorage.setItem("guideClosed", "true");
+});
+if (localStorage.getItem("guideClosed") === "true") {
+  stickyGuide.style.display = "none";
+  guideOpen.classList.add("visible");
+}
+
+guideClose?.addEventListener("click", () => {
+  stickyGuide.style.display = "none";
+  guideOpen.classList.add("visible");
+  localStorage.setItem("guideClosed", "true");
+});
+
+guideOpen?.addEventListener("click", () => {
+  stickyGuide.style.display = "flex";
+  guideOpen.classList.remove("visible");
+  localStorage.setItem("guideClosed", "false");
 });
