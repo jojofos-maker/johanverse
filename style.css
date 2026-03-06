@@ -88,3 +88,23 @@ h1 { font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.95; margin: 10px 0 12px
   .hero { padding-bottom: 24px; }
   .hero-grid { min-height: auto; padding-top: 12px; }
 }
+.timeline {
+  margin-top: 40px;
+}
+
+.timeline-item {
+  display: flex;
+  margin-bottom: 25px;
+}
+
+.timeline-year {
+  font-weight: bold;
+  width: 120px;
+  color: #3c6e47;
+}
+
+.timeline-content {
+  background: #f6f2e8;
+  padding: 15px;
+  border-radius: 10px;
+}
