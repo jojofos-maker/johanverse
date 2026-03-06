@@ -1,4 +1,3 @@
-console.log("Script loaded");
 const stickyGuide = document.getElementById("stickyGuide");
 const stickyBubble = document.getElementById("stickyGuideBubble");
 const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
