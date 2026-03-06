@@ -1,3 +1,4 @@
+const guideClose = document.getElementById("guideClose");
 const stickyGuide = document.getElementById("stickyGuide");
 const stickyBubble = document.getElementById("stickyGuideBubble");
 const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
@@ -84,3 +85,11 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 window.addEventListener("scroll", updateGuide);
 window.addEventListener("load", updateGuide);
 window.addEventListener("resize", updateGuide);
+if (localStorage.getItem("guideClosed") === "true") {
+  stickyGuide.style.display = "none";
+}
+
+guideClose?.addEventListener("click", () => {
+  stickyGuide.style.display = "none";
+  localStorage.setItem("guideClosed", "true");
+});
