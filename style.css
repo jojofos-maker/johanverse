@@ -1,22 +1,11 @@
+/* =========================
+   1. RESET / GRUNNINNSTILLINGER
+========================= */
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-:root {
-  --bg: #efe4d2;
-  --bg-soft: #f6f1e8;
-  --card: #fbf8f2;
-  --ink: #18283b;
-  --muted: #5b6a79;
-  --line: rgba(24, 40, 59, 0.1);
-  --green: #3f7f69;
-  --shadow: 0 20px 45px rgba(24, 40, 59, 0.09);
-  --radius-xl: 28px;
-  --radius-lg: 20px;
-  --radius-md: 14px;
-  --max: 1180px;
 }
 
 html {
@@ -41,10 +30,96 @@ a {
   text-decoration: none;
 }
 
+/* =========================
+   2. VARIABLER
+========================= */
+
+:root {
+  --bg: #efe4d2;
+  --bg-soft: #f6f1e8;
+  --card: #fbf8f2;
+  --ink: #18283b;
+  --muted: #5b6a79;
+  --line: rgba(24, 40, 59, 0.1);
+  --green: #4e8b6f;
+  --green-dark: #3d735a;
+  --shadow: 0 20px 45px rgba(24, 40, 59, 0.09);
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --max: 1180px;
+}
+
+/* =========================
+   3. LAYOUT / HJELPEKLASSER
+========================= */
+
 .container {
   width: min(var(--max), calc(100% - 48px));
   margin: 0 auto;
 }
+
+.section {
+  padding: 96px 0;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--green);
+  margin-bottom: 14px;
+}
+
+/* =========================
+   4. TYPOGRAFI
+========================= */
+
+.hero h1,
+.section-head h2,
+.contact-box h2 {
+  margin: 0;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+}
+
+.hero h1 {
+  font-size: clamp(3.4rem, 8vw, 6.2rem);
+  max-width: 9ch;
+}
+
+.hero-role {
+  margin-top: 24px;
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  color: var(--muted);
+}
+
+.hero-intro {
+  margin-top: 18px;
+  font-size: clamp(1.08rem, 1.8vw, 1.45rem);
+  max-width: 34ch;
+}
+
+.section-head {
+  max-width: 760px;
+  margin-bottom: 34px;
+}
+
+.section-head h2 {
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  margin-bottom: 12px;
+}
+
+.section-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+
+/* =========================
+   5. NAVIGASJON
+========================= */
 
 .site-header {
   position: sticky;
@@ -78,11 +153,33 @@ a {
 .menu a {
   color: var(--muted);
   font-weight: 500;
+  position: relative;
+  transition: color 0.2s ease;
 }
 
 .menu a:hover {
   color: var(--ink);
 }
+
+.menu a.active {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.menu a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--green);
+  border-radius: 999px;
+}
+
+/* =========================
+   6. HERO
+========================= */
 
 .hero {
   display: grid;
@@ -94,40 +191,6 @@ a {
   padding-bottom: 48px;
 }
 
-.eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.84rem;
-  font-weight: 800;
-  color: var(--green);
-  margin-bottom: 14px;
-}
-
-.hero h1,
-.section-head h2,
-.contact-box h2 {
-  margin: 0;
-  letter-spacing: -0.05em;
-  line-height: 0.95;
-}
-
-.hero h1 {
-  font-size: clamp(3.4rem, 8vw, 6.2rem);
-  max-width: 9ch;
-}
-
-.hero-role {
-  margin-top: 24px;
-  font-size: clamp(1.15rem, 2vw, 1.6rem);
-  color: var(--muted);
-}
-
-.hero-intro {
-  margin-top: 18px;
-  font-size: clamp(1.08rem, 1.8vw, 1.45rem);
-  max-width: 34ch;
-}
-
 .hero-actions,
 .contact-actions {
   display: flex;
@@ -136,34 +199,8 @@ a {
   margin-top: 32px;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 56px;
-  padding: 0 24px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  font-weight: 700;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-}
-
-.btn-primary {
-  background: var(--ink);
-  color: white;
-  box-shadow: var(--shadow);
-}
-
-.btn-secondary {
-  border-color: var(--line);
-  background: transparent;
-}
-
 .hero-card {
+  position: relative;
   background: rgba(255, 255, 255, 0.48);
   border: 1px solid rgba(255, 255, 255, 0.65);
   border-radius: calc(var(--radius-xl) + 8px);
@@ -180,15 +217,50 @@ a {
   animation: floatMaskot 4s ease-in-out infinite;
 }
 
-@keyframes floatMaskot {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
+/* =========================
+   7. KNAPPER
+========================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0 24px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
 }
 
-.section {
-  padding: 96px 0;
+.btn:hover {
+  transform: translateY(-1px);
 }
+
+.btn-primary {
+  background: var(--ink);
+  color: white;
+  box-shadow: var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--green);
+  color: white;
+  border: none;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary:hover {
+  background: var(--green-dark);
+}
+
+/* =========================
+   8. HISTORIE / SEKSJONER
+========================= */
 
 .section-story {
   background: linear-gradient(
@@ -204,21 +276,72 @@ a {
   background: rgba(255, 255, 255, 0.25);
 }
 
-.section-head {
-  max-width: 760px;
-  margin-bottom: 34px;
+/* =========================
+   9. MIN REISE
+========================= */
+
+.journey-list {
+  display: grid;
+  gap: 36px;
+  margin-top: 28px;
 }
 
-.section-head h2 {
-  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
-  margin-bottom: 12px;
+.journey-item {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 26px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(24, 40, 59, 0.08);
+  border-radius: 24px;
+  padding: 22px;
 }
 
-.section-head p {
+.journey-item.reverse {
+  grid-template-columns: 0.95fr 1.05fr;
+}
+
+.journey-item.reverse .journey-image {
+  order: 2;
+}
+
+.journey-item.reverse .journey-copy {
+  order: 1;
+}
+
+.journey-image img {
+  width: 100%;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(24, 40, 59, 0.08);
+}
+
+.journey-kicker {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.journey-copy h3 {
+  margin: 0 0 10px;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  letter-spacing: -0.03em;
+}
+
+.journey-copy p {
   margin: 0;
   color: var(--muted);
-  font-size: 1.08rem;
+  line-height: 1.75;
+  font-size: 1.05rem;
 }
+
+/* =========================
+   10. GAMLE HISTORIEKORT / TIMELINE
+   (beholdes kun hvis de fortsatt brukes)
+========================= */
 
 .timeline {
   margin: 26px 0 38px;
@@ -320,6 +443,10 @@ a {
   font-size: 1.12rem;
 }
 
+/* =========================
+   11. RESULTATER / INSIGHTS
+========================= */
+
 .results-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -361,6 +488,10 @@ a {
   padding-top: 8px;
   font-weight: 600;
 }
+
+/* =========================
+   12. FAQ
+========================= */
 
 .faq-list {
   display: grid;
@@ -404,6 +535,10 @@ a {
   color: var(--muted);
 }
 
+/* =========================
+   13. KONTAKT
+========================= */
+
 .contact-box {
   display: flex;
   align-items: center;
@@ -417,6 +552,134 @@ a {
   color: var(--muted);
   max-width: 50ch;
 }
+
+/* =========================
+   14. SPEECH BOBLE I HERO
+========================= */
+
+.speech {
+  position: absolute;
+  top: -20px;
+  right: -10px;
+  background: white;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  max-width: 220px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 3;
+  animation: bubbleIn 1.2s ease;
+}
+
+.speech::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 20px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  transform: rotate(45deg);
+}
+
+/* =========================
+   15. STICKY GUIDE
+========================= */
+
+.sticky-guide {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: none;
+  align-items: flex-end;
+  gap: 12px;
+  z-index: 50;
+}
+
+.sticky-guide.visible {
+  display: flex;
+}
+
+.sticky-guide-img {
+  width: 92px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  background: white;
+}
+
+.sticky-guide-bubble {
+  background: white;
+  color: var(--ink);
+  border-radius: 16px;
+  padding: 12px 14px;
+  max-width: 220px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.guide-close {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: #1f2e3d;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 24px;
+  padding: 0;
+}
+
+.guide-close:hover {
+  background: #000;
+}
+
+.guide-open {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #1f2e3d;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  display: none;
+  z-index: 50;
+}
+
+.guide-open.visible {
+  display: block;
+}
+
+/* =========================
+   16. ANIMASJONER
+========================= */
+
+@keyframes floatMaskot {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes bubbleIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================
+   17. RESPONSIVE
+========================= */
 
 @media (max-width: 960px) {
   .hero {
@@ -437,8 +700,15 @@ a {
 
   .cards-grid,
   .results-grid,
-  .insight-list {
+  .insight-list,
+  .journey-item,
+  .journey-item.reverse {
     grid-template-columns: 1fr;
+  }
+
+  .journey-item.reverse .journey-image,
+  .journey-item.reverse .journey-copy {
+    order: initial;
   }
 
   .timeline-item {
@@ -453,6 +723,23 @@ a {
   .contact-box {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .sticky-guide {
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
+    gap: 10px;
+  }
+
+  .sticky-guide-img {
+    width: 72px;
+    height: 72px;
+  }
+
+  .sticky-guide-bubble {
+    max-width: none;
+    font-size: 0.88rem;
   }
 }
 
@@ -489,250 +776,5 @@ a {
   .hero-actions,
   .contact-actions {
     width: 100%;
-  }
-}
-.speech {
-  position: absolute;
-  top: -20px;
-  right: -10px;
-  background: white;
-  border-radius: 14px;
-  padding: 12px 16px;
-  font-size: 0.9rem;
-  max-width: 200px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  animation: bubbleIn 1.2s ease;
-}
-
-.hero-card {
-  position: relative;
-}
-
-.speech:after {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 20px;
-  width: 16px;
-  height: 16px;
-  background: white;
-  transform: rotate(45deg);
-}
-
-@keyframes bubbleIn {
-  0% { opacity:0; transform: translateY(20px);}
-  100% { opacity:1; transform: translateY(0);}
-}
-.speech {
-  position: absolute;
-  top: -20px;
-  right: -10px;
-  background: white;
-  border-radius: 14px;
-  padding: 12px 16px;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  max-width: 220px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  z-index: 3;
-}
-
-.hero-card {
-  position: relative;
-}
-
-.speech::after {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 20px;
-  width: 16px;
-  height: 16px;
-  background: white;
-  transform: rotate(45deg);
-}
-
-@keyframes bubbleIn {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-.sticky-guide {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  display: none;
-  align-items: flex-end;
-  gap: 12px;
-  z-index: 50;
-}
-
-.sticky-guide.visible {
-  display: flex;
-}
-
-.sticky-guide-img {
-  width: 92px;
-  height: 92px;
-  object-fit: cover;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  background: white;
-}
-
-.sticky-guide-bubble {
-  background: white;
-  color: var(--ink);
-  border-radius: 16px;
-  padding: 12px 14px;
-  max-width: 220px;
-  font-size: 0.92rem;
-  line-height: 1.4;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-@media (max-width: 960px) {
-  .sticky-guide {
-    right: 14px;
-    bottom: 14px;
-    left: 14px;
-    gap: 10px;
-  }
-
-  .sticky-guide-img {
-    width: 72px;
-    height: 72px;
-  }
-
-  .sticky-guide-bubble {
-    max-width: none;
-    font-size: 0.88rem;
-  }
-}
-.menu a {
-  position: relative;
-  transition: color 0.2s ease;
-}
-
-.menu a.active {
-  color: var(--ink);
-  font-weight: 700;
-}
-
-.menu a.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
-  height: 2px;
-  background: var(--green);
-  border-radius: 999px;
-}
-.guide-close {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: none;
-  background: #1f2e3d;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  line-height: 24px;
-  padding: 0;
-}
-
-.guide-close:hover {
-  background: #000;
-}
-.guide-open {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  padding: 12px 16px;
-  border-radius: 999px;
-  border: none;
-  background: #1f2e3d;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  display: none;
-  z-index: 50;
-}
-
-.guide-open.visible {
-  display: block;
-}
-.journey-list {
-  display: grid;
-  gap: 36px;
-  margin-top: 28px;
-}
-
-.journey-item {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 26px;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.28);
-  border: 1px solid rgba(24, 40, 59, 0.08);
-  border-radius: 24px;
-  padding: 22px;
-}
-
-.journey-item.reverse {
-  grid-template-columns: 0.95fr 1.05fr;
-}
-
-.journey-item.reverse .journey-image {
-  order: 2;
-}
-
-.journey-item.reverse .journey-copy {
-  order: 1;
-}
-
-.journey-image img {
-  width: 100%;
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(24, 40, 59, 0.08);
-}
-
-.journey-kicker {
-  display: inline-block;
-  margin-bottom: 10px;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--green);
-}
-
-.journey-copy h3 {
-  margin: 0 0 10px;
-  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
-  letter-spacing: -0.03em;
-}
-
-.journey-copy p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.75;
-  font-size: 1.05rem;
-}
-
-@media (max-width: 960px) {
-  .journey-item,
-  .journey-item.reverse {
-    grid-template-columns: 1fr;
-  }
-
-  .journey-item.reverse .journey-image,
-  .journey-item.reverse .journey-copy {
-    order: initial;
   }
 }
