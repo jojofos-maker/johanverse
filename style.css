@@ -610,3 +610,23 @@ a {
     font-size: 0.88rem;
   }
 }
+.menu a {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.menu a.active {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.menu a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--green);
+  border-radius: 999px;
+}
