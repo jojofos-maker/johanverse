@@ -85,7 +85,13 @@ h1 { font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.95; margin: 10px 0 12px
   .hero-grid, .story-grid, .results-grid, .lessons-grid, .contact-box { grid-template-columns: 1fr; display: grid; }
   .nav { flex-direction: column; gap: 12px; }
   .nav-links { flex-wrap: wrap; justify-content: center; }
-  .hero { padding-bottom: 24px; }
+  .hero .hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  min-height: 90vh;
+  padding: 60px 40px;
+} { padding-bottom: 24px; }
   .hero-grid { min-height: auto; padding-top: 12px; }
 }
 .timeline {
