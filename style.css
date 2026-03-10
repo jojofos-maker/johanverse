@@ -257,7 +257,10 @@ a {
 .btn-secondary:hover {
   background: var(--green-dark);
 }
-
+.btn-secondary:hover {
+  background: #25D366;
+  color: white;
+}
 /* =========================
    8. HISTORIE / SEKSJONER
 ========================= */
