@@ -146,3 +146,25 @@ guideOpen?.addEventListener("click", () => {
 window.addEventListener("scroll", updateGuide);
 window.addEventListener("load", updateGuide);
 window.addEventListener("resize", updateGuide);
+/* =========================
+   SCROLL REVEAL
+========================= */
+
+const revealItems = document.querySelectorAll(".reveal");
+
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  },
+  {
+    threshold: 0.15
+  }
+);
+
+revealItems.forEach((item) => {
+  revealObserver.observe(item);
+});
