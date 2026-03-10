@@ -778,3 +778,18 @@ a {
     width: 100%;
   }
 }
+/* =========================
+   BUTTON ICONS
+========================= */
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-icon svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
