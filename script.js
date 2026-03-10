@@ -1,21 +1,29 @@
-const guideOpen = document.getElementById("guideOpen");
-const guideClose = document.getElementById("guideClose");
+/* =========================
+   ELEMENTER
+========================= */
+
 const stickyGuide = document.getElementById("stickyGuide");
 const stickyBubble = document.getElementById("stickyGuideBubble");
+const guideClose = document.getElementById("guideClose");
+const guideOpen = document.getElementById("guideOpen");
 const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
+
+/* =========================
+   TEKSTER FOR STICKY GUIDE
+========================= */
 
 const sections = [
   {
     id: "historien",
-    text: "Her er reisen min i korte trekk."
+    text: "Her er den korte versjonen av reisen min — fra Sørlandet til ledelse og selskapsbygging."
   },
   {
     id: "resultater",
-    text: "Her er noen konkrete resultater jeg er stolt av."
+    text: "Jeg liker ikke bare ideer. Jeg liker resultater."
   },
   {
     id: "faq",
-    text: "Her kan du intervjue meg litt før vi snakker sammen."
+    text: "Her kan du få et inntrykk av hvordan jeg tenker som leder."
   },
   {
     id: "kontakt",
@@ -23,9 +31,14 @@ const sections = [
   }
 ];
 
+/* =========================
+   MENYMARKERING
+========================= */
+
 function setActiveMenu(sectionId) {
   menuLinks.forEach((link) => {
     const target = link.getAttribute("href").replace("#", "");
+
     if (target === sectionId) {
       link.classList.add("active");
     } else {
@@ -34,9 +47,14 @@ function setActiveMenu(sectionId) {
   });
 }
 
+/* =========================
+   STICKY GUIDE OPPDATERING
+========================= */
+
 function updateGuide() {
   const scrollY = window.scrollY;
 
+  // Vis sticky guide etter litt scroll
   if (scrollY > 220) {
     stickyGuide?.classList.add("visible");
   } else {
@@ -46,20 +64,23 @@ function updateGuide() {
   let currentText = "Hei! Jeg følger deg nedover siden.";
   let currentSection = "";
 
-  for (const section of sections) {
+  sections.forEach((section) => {
     const el = document.getElementById(section.id);
-    if (!el) continue;
+    if (!el) return;
 
     const rect = el.getBoundingClientRect();
+
     if (rect.top <= window.innerHeight * 0.45) {
       currentText = section.text;
       currentSection = section.id;
     }
-  }
+  });
 
+  // Bytt tekst i boblen
   if (stickyBubble && stickyBubble.textContent !== currentText) {
     stickyBubble.style.opacity = "0";
     stickyBubble.style.transform = "translateY(8px)";
+
     setTimeout(() => {
       stickyBubble.textContent = currentText;
       stickyBubble.style.opacity = "1";
@@ -67,6 +88,7 @@ function updateGuide() {
     }, 150);
   }
 
+  // Marker aktiv seksjon i menyen
   if (currentSection) {
     setActiveMenu(currentSection);
   } else {
@@ -74,39 +96,53 @@ function updateGuide() {
   }
 }
 
+/* =========================
+   SMOOTH SCROLL
+========================= */
+
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
   link.addEventListener("click", (e) => {
     const target = document.querySelector(link.getAttribute("href"));
+
     if (!target) return;
+
     e.preventDefault();
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   });
 });
+
+/* =========================
+   LUKK / ÅPNE GUIDE
+========================= */
+
+// Husk hvis bruker tidligere har lukket guiden
+if (localStorage.getItem("guideClosed") === "true") {
+  if (stickyGuide) stickyGuide.style.display = "none";
+  guideOpen?.classList.add("visible");
+}
+
+// Lukk guide
+guideClose?.addEventListener("click", () => {
+  if (stickyGuide) stickyGuide.style.display = "none";
+  guideOpen?.classList.add("visible");
+  localStorage.setItem("guideClosed", "true");
+});
+
+// Åpne guide igjen
+guideOpen?.addEventListener("click", () => {
+  if (stickyGuide) stickyGuide.style.display = "flex";
+  guideOpen?.classList.remove("visible");
+  localStorage.setItem("guideClosed", "false");
+  updateGuide();
+});
+
+/* =========================
+   EVENTS
+========================= */
 
 window.addEventListener("scroll", updateGuide);
 window.addEventListener("load", updateGuide);
 window.addEventListener("resize", updateGuide);
-if (localStorage.getItem("guideClosed") === "true") {
-  stickyGuide.style.display = "none";
-}
-
-guideClose?.addEventListener("click", () => {
-  stickyGuide.style.display = "none";
-  localStorage.setItem("guideClosed", "true");
-});
-if (localStorage.getItem("guideClosed") === "true") {
-  stickyGuide.style.display = "none";
-  guideOpen.classList.add("visible");
-}
-
-guideClose?.addEventListener("click", () => {
-  stickyGuide.style.display = "none";
-  guideOpen.classList.add("visible");
-  localStorage.setItem("guideClosed", "true");
-});
-
-guideOpen?.addEventListener("click", () => {
-  stickyGuide.style.display = "flex";
-  guideOpen.classList.remove("visible");
-  localStorage.setItem("guideClosed", "false");
-});
