@@ -251,6 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!chatForm || !chatInput || !chatMessages) return;
 
   const knowledgeBase = Array.isArray(window.chatbotKnowledgeBase)
+  const usedFollowUps = new Set();
     ? window.chatbotKnowledgeBase
     : [];
 
@@ -305,27 +306,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* 🔹 FOLLOWUPS */
-  function createFollowUps(followUps = []) {
-    if (!followUps.length) return null;
+function createFollowUps(followUps = []) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "chatbot-suggestions";
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "chatbot-suggestions";
+  const filtered = followUps.filter((q) => !usedFollowUps.has(q));
 
-    followUps.forEach((q) => {
-      const btn = document.createElement("button");
-      btn.className = "chat-suggestion";
-      btn.textContent = q;
+  if (!filtered.length) return null;
 
-      btn.onclick = () => {
-        trackCloudflareEvent(`Chatbot Oppfølging: ${q}`);
-        handleQuestion(q);
-      };
+  filtered.forEach((q) => {
+    usedFollowUps.add(q);
 
-      wrapper.appendChild(btn);
-    });
+    const btn = document.createElement("button");
+    btn.className = "chat-suggestion";
+    btn.textContent = q;
 
-    return wrapper;
-  }
+    btn.onclick = () => {
+      trackCloudflareEvent(`Chatbot Oppfølging: ${q}`);
+      handleQuestion(q);
+    };
+
+    wrapper.appendChild(btn);
+  });
+
+  return wrapper;
+}
 
   /* 🔹 MESSAGE */
   function addMessage(text, sender, followUps = []) {
