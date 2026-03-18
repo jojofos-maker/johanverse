@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JJ historien</title>
-  <meta name="description" content="Interaktiv kandidatprofil for Johan Jørgen Fossli" />
+  <meta
+    name="description"
+    content="Interaktiv kandidatprofil for Johan Jørgen Fossli"
+  />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,19 +18,24 @@
 
   <link rel="stylesheet" href="style.css" />
 
+  <!-- Cloudflare Web Analytics -->
   <script
     defer
     src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token": "31e43baba8a64c498aa9babb1de9ba12"}'
   ></script>
+  <!-- End Cloudflare Web Analytics -->
 </head>
 
 <body>
+  <!-- =========================
+       HEADER / NAV
+  ========================== -->
   <header class="site-header">
-    <div class="container nav">
-      <a href="#top" class="brand">JJ historien</a>
+    <div class="container site-header-inner">
+      <a href="#top" class="logo">JJ historien</a>
 
-      <nav class="menu">
+      <nav class="menu" aria-label="Hovedmeny">
         <a href="#historien">Historien</a>
         <a href="#resultater">Resultater</a>
         <a href="#faq">OSS</a>
@@ -37,54 +45,67 @@
     </div>
   </header>
 
+  <!-- =========================
+       MAIN
+  ========================== -->
   <main id="top">
-    <section class="hero container">
-      <div class="hero-copy">
-        <div class="eyebrow">Ydmyk leder med gjennomføringskraft</div>
-        <h1>Johan Jørgen Fossli</h1>
+    <!-- =========================
+         HERO
+    ========================== -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy reveal">
+          <div class="eyebrow">Ydmyk leder med gjennomføringskraft</div>
 
-        <p class="hero-role">
-          Leder • Forretningsutvikling • Sirkulærøkonomi • Teknologi
-        </p>
+          <h1>Johan Jørgen Fossli</h1>
 
-        <p class="hero-intro">
-          Over 20 år i operative lederroller, med tyngde innen drift,
-          selskapsbygging, strategi og gjennomføring.
-        </p>
+          <p class="hero-role">
+            Leder • Forretningsutvikling • Sirkulærøkonomi • Teknologi
+          </p>
 
-        <div class="hero-actions">
-          <a
-            class="btn btn-primary"
-            href="#historien"
-            onclick="trackCloudflareEvent('Hero Start historien')"
-          >
-            Start historien
-          </a>
+          <p class="hero-intro">
+            Over 20 år i operative lederroller, med tyngde innen drift,
+            selskapsbygging, strategi og gjennomføring.
+          </p>
 
-          <a
-            class="btn btn-secondary"
-            href="#kontakt"
-            onclick="trackCloudflareEvent('Hero Ta kontakt')"
-          >
-            Ta kontakt
-          </a>
+          <div class="hero-actions">
+            <a
+              class="btn btn-primary"
+              href="#historien"
+              onclick="trackCloudflareEvent('Hero Start historien')"
+            >
+              Start historien
+            </a>
+
+            <a
+              class="btn btn-secondary"
+              href="#kontakt"
+              onclick="trackCloudflareEvent('Hero Ta kontakt')"
+            >
+              Ta kontakt
+            </a>
+          </div>
         </div>
-      </div>
 
-      <div class="hero-card">
-        <img src="maskot.jpeg" alt="Tegneseriefigur av Johan" />
-        <div class="speech" id="speechBubble">
-          Hei! 👋 Scroll ned så skal jeg fortelle historien min.
+        <div class="hero-card reveal">
+          <img src="maskot.jpeg" alt="Tegneseriefigur av Johan" />
+
+          <div class="speech" id="speechBubble">
+            Hei! 👋 Scroll ned så skal jeg fortelle historien min.
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- =========================
+         HISTORIEN
+    ========================== -->
     <section id="historien" class="section section-story">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
           <div class="eyebrow">Min reise</div>
-          <h2>Dannelsen</h2>
-          <p>Et kort overblikk over reisen min.</p>
+          <h2 class="section-title">Dannelsen</h2>
+          <p class="section-intro">Et kort overblikk over reisen min.</p>
         </div>
 
         <div class="journey-list">
@@ -92,11 +113,12 @@
             <div class="journey-image">
               <img src="Oppvekst.png" alt="Oppvekst i Lillesand" />
             </div>
+
             <div class="journey-copy">
               <div class="journey-kicker">Kapittel 1</div>
               <h3>Oppvekst i Lillesand</h3>
               <p>
-                Født og oppvokst i Sørlandets "perle" Lillesand. Her ble mye av
+                Født og oppvokst i Sørlandets perle Lillesand. Her ble mye av
                 grunnlaget lagt: nysgjerrighet, arbeidsvilje og gleden av å få
                 ting til sammen med andre.
               </p>
@@ -107,13 +129,17 @@
             <div class="journey-image">
               <img src="lufting.png" alt="Lufting i Bodø, Porsgrunn og Oslo" />
             </div>
+
             <div class="journey-copy">
               <div class="journey-kicker">Kapittel 2</div>
               <h3>Utforskerfasen</h3>
               <p>
                 Bodø, Porsgrunn og Oslo ga nye perspektiver. Erfaringene utenfor
                 Sørlandet gjorde meg tryggere, mer nysgjerrig og mer bevisst på
-                hva slags leder jeg ønsket å bli.
+                hva slags leder jeg ønsket å bli. Med førstegangstjeneste i
+                Luftforsvaret, studier på BI og jobb i Vesta, If,
+                Bredbåndsfabrikken og Viken fikk jeg med meg mange gode
+                impulser.
               </p>
             </div>
           </article>
@@ -122,12 +148,15 @@
             <div class="journey-image">
               <img src="De første jobbene.png" alt="De første jobbene" />
             </div>
+
             <div class="journey-copy">
               <div class="journey-kicker">Kapittel 3</div>
               <h3>De første jobbene</h3>
               <p>
                 Erfaring fra salg, bemanning og kundearbeid hos blant annet
-                Adecco, Würth og Destinasjon Sørlandet.
+                Adecco, Würth og som turist- og salgssjef i Destinasjon
+                Sørlandet. Dette lærte meg mye om relasjoner, service og
+                forretning.
               </p>
             </div>
           </article>
@@ -136,12 +165,14 @@
             <div class="journey-image">
               <img src="DL LiBiR.png" alt="Daglig leder i LiBiR" />
             </div>
+
             <div class="journey-copy">
               <div class="journey-kicker">Kapittel 4</div>
               <h3>16 år som daglig leder</h3>
               <p>
                 I LiBiR fikk jeg ansvar for strategi, drift, økonomi og
-                organisasjon.
+                organisasjon. 16 år i en rolle som krevde både oversikt,
+                gjennomføringsevne og evne til å utvikle mennesker.
               </p>
             </div>
           </article>
@@ -150,11 +181,14 @@
             <div class="journey-image">
               <img src="LiBiR entre.png" alt="Entreprenørskap og utvikling" />
             </div>
+
             <div class="journey-copy">
               <div class="journey-kicker">Kapittel 5</div>
               <h3>Entreprenørskap og utvikling</h3>
               <p>
                 Jeg tok initiativ til nye selskaper og nye satsinger.
+                Miljøpartner Sør ble bygget opp til en sterk aktør og senere del
+                av Lindum Sør.
               </p>
             </div>
           </article>
@@ -163,11 +197,14 @@
             <div class="journey-image">
               <img src="Biokull AM.png" alt="Innovasjon og biokull" />
             </div>
+
             <div class="journey-copy">
               <div class="journey-kicker">Kapittel 6</div>
               <h3>Innovasjon og nye muligheter</h3>
               <p>
-                I Agder Miljø jobbet vi med biokull og nye miljøløsninger.
+                I Agder Miljø jobbet vi med biokull og nye miljøløsninger. Det
+                var en krevende, lærerik og fremtidsrettet fase som også ga
+                tydelige kommersielle resultater.
               </p>
             </div>
           </article>
@@ -175,6 +212,9 @@
       </div>
     </section>
 
+    <!-- =========================
+         SITAT
+    ========================== -->
     <section class="section">
       <div class="container">
         <article class="quote-card reveal">
@@ -186,82 +226,173 @@
       </div>
     </section>
 
+    <!-- =========================
+         RESULTATER
+    ========================== -->
     <section id="resultater" class="section section-results">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
           <div class="eyebrow">Utvalgte resultater</div>
-          <h2>Gjennomføringsevne</h2>
+          <h2 class="section-title">Gjennomføringsevne</h2>
         </div>
 
         <div class="results-grid">
-          <article class="result-card">
+          <article class="result-card reveal">
             <div class="result-card-image">
               <img src="libir-daglig-leder.png" alt="Illustrasjon fra LiBiR" />
             </div>
             <p class="result-number">16 år</p>
             <h3>LiBiR</h3>
-            <p>Daglig leder med helhetlig ansvar.</p>
+            <p>
+              Daglig leder med helhetlig ansvar for strategi, drift, økonomi og
+              organisasjon.
+            </p>
           </article>
 
-          <article class="result-card">
+          <article class="result-card reveal">
             <div class="result-card-image">
-              <img src="gaselle-lindum-sor-2019.jpg" alt="Gaselle" />
+              <img
+                src="gaselle-lindum-sor-2019.jpg"
+                alt="Gaselle-utmerkelse for Lindum Sør i 2019"
+              />
             </div>
             <p class="result-number">2× Gaselle</p>
             <h3>Miljøpartner Sør og Lindum Sør</h3>
-            <p>Bygget opp selskap, skapte vekst og ledet til salg og fusjon.</p>
+            <p>
+              Bygget opp selskap, skapte vekst og ledet frem til salg og fusjon.
+            </p>
           </article>
 
-          <article class="result-card">
+          <article class="result-card reveal">
             <div class="result-card-image">
-              <img src="vekst_50.png" alt="50 prosent vekst" />
+              <img src="vekst_50.png" alt="Illustrasjon av 50 prosent vekst" />
             </div>
             <p class="result-number">+50 %</p>
             <h3>Agder Miljø</h3>
-            <p>Økte omsetningen 50 % på ett år.</p>
+            <p>
+              Økte omsetningen 50 % på ett år i en krevende oppbyggingsfase.
+            </p>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="faq" class="section section-faq">
+    <!-- =========================
+         LEDELSESFILOSOFI
+    ========================== -->
+    <section class="section section-insights">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
+          <div class="eyebrow">Johans innsikter</div>
+          <h2 class="section-title">Litt lederskapsfilosofi</h2>
+        </div>
+
+        <div class="insight-list">
+          <div class="insight-item reveal">
+            <span>01</span>
+            <p>Ledelse handler først og fremst om mennesker.</p>
+          </div>
+
+          <div class="insight-item reveal">
+            <span>02</span>
+            <p>
+              De beste løsningene kommer ofte fra de som jobber nærmest
+              problemet.
+            </p>
+          </div>
+
+          <div class="insight-item reveal">
+            <span>03</span>
+            <p>Teknologi er et verktøy – ikke en strategi.</p>
+          </div>
+
+          <div class="insight-item reveal">
+            <span>04</span>
+            <p>Kultur slår strategi når hverdagen blir krevende.</p>
+          </div>
+
+          <div class="insight-item reveal">
+            <span>05</span>
+            <p>Ledelse handler om å la andre skinne.</p>
+          </div>
+
+          <div class="insight-item reveal">
+            <span>06</span>
+            <p>Hvis du alltid gjør ditt beste, får du ofte folk med deg.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         FAQ / OSS
+    ========================== -->
+    <section id="faq" class="section section-faq faq">
+      <div class="container">
+        <div class="section-head reveal">
           <div class="eyebrow">Intervju Johan</div>
-          <h2>Spørsmål jeg ofte får</h2>
+          <h2 class="section-title">Spørsmål jeg ofte får</h2>
         </div>
 
         <div class="faq-list">
-          <details>
+          <details class="reveal">
             <summary>Hva slags leder er du?</summary>
-            <p>En operativ leder som liker å være tett på organisasjonen.</p>
+            <p>
+              En operativ leder som liker å være tett på organisasjonen, skape
+              retning og få resultater gjennom mennesker.
+            </p>
           </details>
 
-          <details>
+          <details class="reveal">
             <summary>Hvordan håndterer du kriser?</summary>
-            <p>Med ro, struktur og tydelig kommunikasjon.</p>
+            <p>
+              Med ro, struktur og tydelig kommunikasjon. Først skaffe oversikt,
+              så prioritere og gjennomføre.
+            </p>
           </details>
 
-          <details>
+          <details class="reveal">
             <summary>Hva gjør du første 90 dager i en ny rolle?</summary>
-            <p>Lytter, analyserer, bygger relasjoner og etablerer retning.</p>
+            <p>
+              Lytter, analyserer, bygger relasjoner og etablerer tydelig
+              retning før større grep tas.
+            </p>
+          </details>
+
+          <details class="reveal">
+            <summary>Hvordan jobber du med teknologi?</summary>
+            <p>
+              Praktisk og nysgjerrig. Jeg bruker teknologi til å forbedre drift,
+              beslutninger og arbeidsflyt.
+            </p>
+          </details>
+
+          <details class="reveal">
+            <summary>Hva kan du bidra med?</summary>
+            <p>
+              Retning, struktur, organisasjonsbygging, forretningsutvikling og
+              evnen til å gjøre strategi om til handling.
+            </p>
           </details>
         </div>
       </div>
     </section>
 
+    <!-- =========================
+         CHATBOT
+    ========================== -->
     <section id="chatbot" class="section chatbot-section">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
           <div class="eyebrow">Spør chatboten</div>
-          <h2>Spør om Johan</h2>
-          <p>
+          <h2 class="section-title">Spør om Johan</h2>
+          <p class="section-intro">
             En enkel guide som svarer på spørsmål om bakgrunn, erfaring,
             resultater og CV.
           </p>
         </div>
 
-        <div class="chatbot-card">
+        <div class="chatbot-card reveal">
           <div class="chatbot-header">
             <div>
               <strong>Johan-assistent</strong>
@@ -270,17 +401,60 @@
           </div>
 
           <div id="chatbotMessages" class="chatbot-messages">
-            <div class="chatbot-message chatbot-message--bot">
-              Hei! Jeg svarer på spørsmål om Johan, erfaringen hans, resultater, lederstil og CV. Du kan for eksempel spørre:
-              <div class="chatbot-suggestions">
-                <button type="button" class="chat-suggestion" data-question="Hvem er Johan Jørgen Fossli?">Hvem er Johan?</button>
-                <button type="button" class="chat-suggestion" data-question="Hva slags erfaring har Johan?">Erfaring</button>
-                <button type="button" class="chat-suggestion" data-question="Hva har Johan gjort i LiBiR?">LiBiR</button>
-                <button type="button" class="chat-suggestion" data-question="Hva er de viktigste resultatene hans?">Resultater</button>
-                <button type="button" class="chat-suggestion" data-question="Hvordan er Johan som leder?">Lederstil</button>
-                <button type="button" class="chat-suggestion" data-question="Hvor finner jeg CV-en?">CV</button>
-              </div>
+            <div class="chatbot-message bot">
+              Hei! Jeg svarer på spørsmål om Johan, erfaringen hans, resultater,
+              lederstil og CV. Du kan for eksempel spørre:
             </div>
+          </div>
+
+          <div id="chatbotFollowUps" class="chatbot-followups">
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hvem er Johan Jørgen Fossli?"
+            >
+              Hvem er Johan?
+            </button>
+
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hva slags erfaring har Johan?"
+            >
+              Erfaring
+            </button>
+
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hva har Johan gjort i LiBiR?"
+            >
+              LiBiR
+            </button>
+
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hva er de viktigste resultatene hans?"
+            >
+              Resultater
+            </button>
+
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hvordan er Johan som leder?"
+            >
+              Lederstil
+            </button>
+
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hvor finner jeg CV-en?"
+            >
+              CV
+            </button>
           </div>
 
           <form id="chatbotForm" class="chatbot-input-row">
@@ -290,10 +464,8 @@
               placeholder="Skriv et spørsmål om Johan..."
               autocomplete="off"
             />
-            <button type="submit">Send</button>
+            <button type="submit" class="btn btn-primary">Send</button>
           </form>
-
-          <div id="chatbotFollowUps" class="chatbot-followups"></div>
 
           <div class="chatbot-links">
             <a
@@ -304,6 +476,7 @@
             >
               Åpne kort CV
             </a>
+
             <a
               href="fossli_cv_full.pdf"
               target="_blank"
@@ -317,11 +490,14 @@
       </div>
     </section>
 
+    <!-- =========================
+         KONTAKT
+    ========================== -->
     <section id="kontakt" class="section section-contact">
-      <div class="container contact-box">
+      <div class="container contact-box reveal">
         <div>
           <div class="eyebrow">Kontakt</div>
-          <h2>La oss ta en prat</h2>
+          <h2 class="section-title">La oss ta en prat</h2>
           <p>
             Vil du vite mer, ta en prat eller invitere til intervju, hører jeg
             gjerne fra deg.
@@ -333,13 +509,77 @@
         </div>
 
         <div class="contact-actions">
-          <a class="btn btn-primary btn-icon" href="mailto:jojofos@gmail.com">
+          <a
+            class="btn btn-primary btn-icon"
+            href="mailto:jojofos@gmail.com"
+            onclick="trackCloudflareEvent('Kontakt E-post')"
+          >
+            <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
+              <path
+                d="M4 6h16v12H4z"
+                stroke="currentColor"
+                fill="none"
+                stroke-width="2"
+              ></path>
+              <path
+                d="M4 7l8 6 8-6"
+                stroke="currentColor"
+                fill="none"
+                stroke-width="2"
+              ></path>
+            </svg>
             <span>Send e-post</span>
           </a>
-          <a class="btn btn-secondary btn-icon" href="fossli_cv_kort.pdf" target="_blank" rel="noopener noreferrer">
+
+          <a
+            class="btn btn-secondary btn-icon"
+            href="https://wa.me/4748881540"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="trackCloudflareEvent('Kontakt WhatsApp')"
+          >
+            <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M12 0a12 12 0 00-10.39 18l-1.61 6 6.16-1.61A12 12 0 1012 0zm0 21.6a9.6 9.6 0 01-4.9-1.34l-.35-.21-3.66.96.98-3.56-.22-.37A9.6 9.6 0 1112 21.6z"
+              ></path>
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+
+          <a
+            class="btn btn-secondary btn-icon"
+            href="https://www.linkedin.com/in/jojofos/"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="trackCloudflareEvent('Kontakt LinkedIn')"
+          >
+            <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M4.98 3.5A2.48 2.48 0 102.5 5.98 2.48 2.48 0 004.98 3.5zM2.5 8h4.96v13H2.5zm7.08 0h4.75v1.78h.07c.66-1.25 2.28-2.57 4.69-2.57 5.01 0 5.93 3.3 5.93 7.59V21h-4.95v-5.53c0-1.32-.02-3.02-1.84-3.02-1.85 0-2.13 1.44-2.13 2.93V21H9.58z"
+              ></path>
+            </svg>
+            <span>LinkedIn</span>
+          </a>
+
+          <a
+            class="btn btn-primary btn-icon"
+            href="fossli_cv_kort.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="trackCloudflareEvent('CV Kort Nedlasting')"
+          >
             <span>📄 Kort CV</span>
           </a>
-          <a class="btn btn-secondary btn-icon" href="fossli_cv_full.pdf" target="_blank" rel="noopener noreferrer">
+
+          <a
+            class="btn btn-secondary btn-icon"
+            href="fossli_cv_full.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="trackCloudflareEvent('CV Full Nedlasting')"
+          >
             <span>📄 Full CV</span>
           </a>
         </div>
@@ -347,19 +587,26 @@
     </section>
   </main>
 
+  <!-- =========================
+       STICKY GUIDE
+  ========================== -->
   <div class="sticky-guide" id="stickyGuide">
-    <button class="guide-close" id="guideClose">×</button>
+    <button class="guide-close" id="guideClose" type="button" aria-label="Lukk guide">
+      ×
+    </button>
+
     <img src="maskot.jpeg" alt="Johan guide" class="sticky-guide-img" />
+
     <div class="sticky-guide-bubble" id="stickyGuideBubble">
       Hei! Jeg følger deg nedover siden.
     </div>
   </div>
 
-  <button id="guideOpen" class="guide-open">
+  <button id="guideOpen" class="guide-open" type="button">
     Snakk med Johan
   </button>
 
-  <script src="chatbot-data.js"></script>
-  <script src="script.js"></script>
+  <script src="chatbot-data.js" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
