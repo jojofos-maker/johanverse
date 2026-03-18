@@ -44,7 +44,7 @@ if (guideOpen && stickyGuide && stickyBubble) {
 }
 
 /* =========================
-   JEVN SCROLL FOR MENY
+   MENYTRACKING
 ========================= */
 
 menuLinks.forEach((link) => {
@@ -55,6 +55,33 @@ menuLinks.forEach((link) => {
     }
   });
 });
+
+/* =========================
+   REVEAL AV SEKSJONER
+========================= */
+
+const revealElements = document.querySelectorAll(
+  ".reveal, .section, .story-card, .result-card, .faq-item, .contact-card"
+);
+
+if (revealElements.length) {
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+        }
+      });
+    },
+    {
+      threshold: 0.15
+    }
+  );
+
+  revealElements.forEach((element) => {
+    revealObserver.observe(element);
+  });
+}
 
 /* =========================
    CHATBOT
@@ -72,19 +99,8 @@ const chatbotState = {
 };
 
 const SMALL_TALK = {
-  greetings: [
-    "hei",
-    "hallo",
-    "hey",
-    "god dag",
-    "heisann"
-  ],
-  thanks: [
-    "takk",
-    "tusen takk",
-    "supert takk",
-    "flott takk"
-  ],
+  greetings: ["hei", "hallo", "hey", "god dag", "heisann"],
+  thanks: ["takk", "tusen takk", "supert takk", "flott takk"],
   shortFollowUps: [
     "fortell mer",
     "mer",
@@ -144,7 +160,9 @@ function renderFollowUps(followUps = []) {
     button.textContent = question;
 
     button.addEventListener("click", () => {
-      chatbotInput.value = question;
+      if (chatbotInput) {
+        chatbotInput.value = question;
+      }
       handleChatbotMessage(question);
     });
 
@@ -215,7 +233,7 @@ function scoreTopic(entry, userText) {
     }
   });
 
-  if (chatbotState.lastMatchId && chatbotState.lastMatchId === entry.id) {
+  if (chatbotState.lastMatchId === entry.id) {
     score += 1;
   }
 
@@ -249,11 +267,9 @@ function getContextAwareMatch(userText) {
   const directMatch = findBestMatch(userText);
   if (directMatch) return directMatch;
 
-  const normalized = normalizeText(userText);
-
   if (
     chatbotState.lastMatchId &&
-    (isShortFollowUp(normalized) || isVeryShortMessage(normalized))
+    (isShortFollowUp(userText) || isVeryShortMessage(userText))
   ) {
     return findById(chatbotState.lastMatchId);
   }
@@ -262,9 +278,7 @@ function getContextAwareMatch(userText) {
 }
 
 function buildAnswer(match, userText) {
-  const normalized = normalizeText(userText);
-
-  if (chatbotState.lastMatchId === match.id && isShortFollowUp(normalized)) {
+  if (chatbotState.lastMatchId === match.id && isShortFollowUp(userText)) {
     return `${match.answer} ${
       match.followUps && match.followUps.length
         ? "Du kan også spørre videre om et av forslagene under."
@@ -284,7 +298,10 @@ function buildFollowUps(match) {
   let selected = freshTopicFollowUps.slice(0, 3);
 
   if (selected.length < 3) {
-    const extra = collectGeneralFollowUps([...selected, ...chatbotState.lastSuggestions]);
+    const extra = collectGeneralFollowUps([
+      ...selected,
+      ...chatbotState.lastSuggestions
+    ]);
     selected = [...selected, ...extra].slice(0, 3);
   }
 
@@ -299,7 +316,7 @@ function getFallbackResponse() {
 
   return {
     answer:
-      "Jeg er ikke helt sikker på hva du mener ennå. Du kan gjerne spørre om erfaring, lederstil, resultater, hva Johan kan bidra med eller hvorfor han er aktuell.",
+      "Jeg er ikke helt sikker på hva du mener ennå. Du kan gjerne spørre om erfaring, lederstil, resultater, CV eller hva Johan kan bidra med.",
     followUps: suggestions
   };
 }
@@ -311,7 +328,7 @@ function handleSmallTalk(userText) {
 
     return {
       answer:
-        "Hei! Du kan spørre meg om Johan Jørgen Fossli, erfaringen hans, lederstilen hans, resultater eller hva han kan bidra med.",
+        "Hei! Du kan spørre meg om Johan Jørgen Fossli, erfaringen hans, lederstilen hans, resultatene hans eller hva han kan bidra med.",
       followUps: suggestions
     };
   }
@@ -389,12 +406,34 @@ if (chatbotForm && chatbotInput) {
 }
 
 /* =========================
+   STATISKE STARTKNAPPER
+========================= */
+
+function bindChatbotStarterButtons() {
+  const starterButtons = document.querySelectorAll(".chatbot-starter");
+
+  starterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const text = button.textContent.trim();
+
+      if (chatbotInput) {
+        chatbotInput.value = text;
+      }
+
+      handleChatbotMessage(text);
+    });
+  });
+}
+
+bindChatbotStarterButtons();
+
+/* =========================
    OPPSTARTSMELDING
 ========================= */
 
 if (chatbotMessages) {
   addMessage(
-    "Hei! Jeg kan svare på spørsmål om Johan Jørgen Fossli, erfaringen hans, lederstil, resultater og hva han kan bidra med.",
+    "Hei! Jeg kan svare på spørsmål om Johan Jørgen Fossli, erfaringen hans, lederstil, resultater, CV og hva han kan bidra med.",
     "bot"
   );
 
@@ -402,14 +441,3 @@ if (chatbotMessages) {
   chatbotState.lastSuggestions = starterFollowUps;
   renderFollowUps(starterFollowUps);
 }
-/* =========================
-   STATISKE START-KNAPPER
-========================= */
-
-document.querySelectorAll(".chatbot-followup").forEach((button) => {
-  button.addEventListener("click", () => {
-    const text = button.textContent;
-    chatbotInput.value = text;
-    handleChatbotMessage(text);
-  });
-});
