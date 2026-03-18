@@ -8,6 +8,11 @@ const guideClose = document.getElementById("guideClose");
 const guideOpen = document.getElementById("guideOpen");
 const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
 
+const chatbotMessages = document.getElementById("chatbotMessages");
+const chatbotForm = document.getElementById("chatbotForm");
+const chatbotInput = document.getElementById("chatbotInput");
+const chatbotFollowUps = document.getElementById("chatbotFollowUps");
+
 /* =========================
    TRACKING
 ========================= */
@@ -18,422 +23,499 @@ function trackCloudflareEvent(name) {
   }
 }
 
-/* Gjør funksjonen tilgjengelig for inline onclick i HTML */
 window.trackCloudflareEvent = trackCloudflareEvent;
 
 /* =========================
-   STICKY GUIDE TEKSTER
+   STICKY GUIDE
 ========================= */
 
-const sections = [
-  {
-    id: "historien",
-    text: "Her er den korte versjonen av reisen min — fra Sørlandet til ledelse og selskapsbygging."
-  },
-  {
-    id: "resultater",
-    text: "Jeg liker ikke bare ideer. Jeg liker resultater."
-  },
-  {
-    id: "faq",
-    text: "Her kan du få et inntrykk av hvordan jeg tenker som leder."
-  },
-  {
-    id: "chatbot",
-    text: "Her kan du stille korte spørsmål om erfaring, resultater, lederstil og CV."
-  },
-  {
-    id: "kontakt",
-    text: "Fikk du lyst til å ta en prat? Her finner du kontaktinfo."
-  }
-];
-
-/* =========================
-   MENYMARKERING
-========================= */
-
-function setActiveMenu(sectionId) {
-  menuLinks.forEach((link) => {
-    const target = link.getAttribute("href").replace("#", "");
-    link.classList.toggle("active", target === sectionId);
+if (guideClose && stickyGuide) {
+  guideClose.addEventListener("click", () => {
+    stickyGuide.classList.add("is-hidden");
+    trackCloudflareEvent("sticky_guide_closed");
   });
 }
 
-/* =========================
-   STICKY GUIDE OPPDATERING
-========================= */
+if (guideOpen && stickyGuide) {
+  guideOpen.addEventListener("click", () => {
+    stickyGuide.classList.remove("is-hidden");
+    trackCloudflareEvent("sticky_guide_opened");
+  });
+}
 
-function updateGuide() {
-  const scrollY = window.scrollY;
-  const guideClosed = localStorage.getItem("guideClosed") === "true";
-
-  if (!guideClosed) {
-    if (scrollY > 220) {
-      stickyGuide?.classList.add("visible");
-    } else {
-      stickyGuide?.classList.remove("visible");
-    }
-  }
-
-  let currentText = "Hei! Jeg følger deg nedover siden.";
-  let currentSection = "";
-
-  sections.forEach((section) => {
-    const el = document.getElementById(section.id);
-    if (!el) return;
-
-    const rect = el.getBoundingClientRect();
-
-    if (rect.top <= window.innerHeight * 0.45) {
-      currentText = section.text;
-      currentSection = section.id;
+if (stickyBubble) {
+  stickyBubble.addEventListener("click", () => {
+    if (stickyGuide) {
+      stickyGuide.classList.remove("is-hidden");
+      trackCloudflareEvent("sticky_bubble_clicked");
     }
   });
-
-  if (stickyBubble && stickyBubble.textContent !== currentText) {
-    stickyBubble.style.opacity = "0";
-    stickyBubble.style.transform = "translateY(8px)";
-
-    setTimeout(() => {
-      stickyBubble.textContent = currentText;
-      stickyBubble.style.opacity = "1";
-      stickyBubble.style.transform = "translateY(0)";
-    }, 150);
-  }
-
-  if (currentSection) {
-    setActiveMenu(currentSection);
-  } else {
-    menuLinks.forEach((link) => link.classList.remove("active"));
-  }
 }
 
 /* =========================
-   SMOOTH SCROLL
+   MENYSPORING
 ========================= */
 
-document.querySelectorAll('a[href^="#"]').forEach((link) => {
-  link.addEventListener("click", (e) => {
-    const href = link.getAttribute("href");
-    const target = document.querySelector(href);
-
-    if (!target) return;
-
-    e.preventDefault();
-    target.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
+if (menuLinks.length) {
+  menuLinks.forEach(link => {
+    link.addEventListener("click", () => {
+      const href = link.getAttribute("href") || "";
+      trackCloudflareEvent(`menu_click_${href.replace("#", "")}`);
     });
   });
-});
-
-/* =========================
-   NAV TRACKING
-========================= */
-
-menuLinks.forEach((link) => {
-  link.addEventListener("click", () => {
-    const target = link.getAttribute("href").replace("#", "");
-    trackCloudflareEvent(`Nav: ${target}`);
-  });
-});
-
-/* =========================
-   GUIDE ÅPNE / LUKKE
-========================= */
-
-if (localStorage.getItem("guideClosed") === "true") {
-  if (stickyGuide) stickyGuide.style.display = "none";
-  guideOpen?.classList.add("visible");
 }
 
-guideClose?.addEventListener("click", () => {
-  if (stickyGuide) {
-    stickyGuide.classList.remove("visible");
-    stickyGuide.style.display = "none";
-  }
-
-  guideOpen?.classList.add("visible");
-  localStorage.setItem("guideClosed", "true");
-  trackCloudflareEvent("Guide Lukket");
-});
-
-guideOpen?.addEventListener("click", () => {
-  if (stickyGuide) {
-    stickyGuide.style.display = "flex";
-    stickyGuide.classList.add("visible");
-  }
-
-  guideOpen?.classList.remove("visible");
-  localStorage.setItem("guideClosed", "false");
-  trackCloudflareEvent("Guide Åpnet");
-  trackCloudflareEvent("Guide Open Scroll Chatbot");
-
-  const chatbotSection = document.getElementById("chatbot");
-  if (chatbotSection) {
-    chatbotSection.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
-
-  updateGuide();
-});
-
 /* =========================
-   SECTION TRACKING
+   CHATBOT - HJELPEFUNKSJONER
 ========================= */
 
-const trackedSections = new Set();
+function normalizeText(text) {
+  return (text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[?.!,;:()]/g, "")
+    .replace(/\s+/g, " ");
+}
 
-const insightSections = [
-  { id: "historien", event: "Section Historien" },
-  { id: "resultater", event: "Section Resultater" },
-  { id: "faq", event: "Section FAQ" },
-  { id: "chatbot", event: "Section Chatbot" },
-  { id: "kontakt", event: "Section Kontakt" }
-];
+function escapeHTML(text) {
+  return (text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
 
-const sectionObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
+function capitalizeFirst(text) {
+  if (!text) return "";
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
 
-      const match = insightSections.find(
-        (section) => section.id === entry.target.id
-      );
-
-      if (!match || trackedSections.has(match.event)) return;
-
-      trackedSections.add(match.event);
-      trackCloudflareEvent(match.event);
-    });
-  },
-  {
-    threshold: 0.35
-  }
-);
-
-insightSections.forEach((section) => {
-  const el = document.getElementById(section.id);
-  if (el) sectionObserver.observe(el);
-});
-
-/* =========================
-   FAQ TRACKING
-========================= */
-
-const faqItems = document.querySelectorAll(".faq-list details");
-
-faqItems.forEach((item) => {
-  item.addEventListener("toggle", () => {
-    if (!item.open) return;
-
-    const summary = item.querySelector("summary");
-    const question = summary?.textContent.trim();
-
-    if (!question) return;
-
-    trackCloudflareEvent(`FAQ: ${question}`);
-  });
-});
-
-/* =========================
-   CHATBOT (RYDDET OG FORBEDRET)
-========================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-  const chatForm = document.getElementById("chatForm");
-  const chatInput = document.getElementById("chatInput");
-  const chatMessages = document.getElementById("chatMessages");
-  const suggestionButtons = document.querySelectorAll(".chat-suggestion");
-
-  if (!chatForm || !chatInput || !chatMessages) return;
-
-  const knowledgeBase = Array.isArray(window.chatbotKnowledgeBase)
-  const usedFollowUps = new Set();
+function getKnowledgeBase() {
+  return Array.isArray(window.chatbotKnowledgeBase)
     ? window.chatbotKnowledgeBase
     : [];
+}
 
-  /* 🔹 NORMALIZE */
-  function normalize(text) {
-    return text
-      .toLowerCase()
-      .replace(/[^\w\sæøå]/gi, "")
-      .trim();
+/* =========================
+   CHATBOT - SAMTALEKONTEKST
+========================= */
+
+const chatState = {
+  lastIntentId: null,
+  lastUserMessage: "",
+  lastBotAnswer: "",
+  recentIntentIds: [],
+  lastFollowUps: []
+};
+
+function updateChatState({ intentId, userMessage, botAnswer, followUps = [] }) {
+  chatState.lastIntentId = intentId || null;
+  chatState.lastUserMessage = userMessage || "";
+  chatState.lastBotAnswer = botAnswer || "";
+  chatState.lastFollowUps = followUps || [];
+
+  if (intentId) {
+    chatState.recentIntentIds.push(intentId);
+    chatState.recentIntentIds = [...new Set(chatState.recentIntentIds)].slice(-5);
   }
+}
 
-  /* 🔹 SCORE */
-  function scoreEntry(input, entry) {
-    const text = normalize(input);
-    let score = 0;
+function getIntentById(intentId) {
+  return getKnowledgeBase().find(item => item.id === intentId) || null;
+}
 
-    entry.keywords.forEach((word) => {
-      if (text.includes(word)) score += 3;
-    });
+/* =========================
+   CHATBOT - FORSTÅ OPPFØLGING
+========================= */
 
-    if (entry.synonyms) {
-      entry.synonyms.forEach((word) => {
-        if (text.includes(word)) score += 2;
-      });
+function isShortFollowUp(text) {
+  const normalized = normalizeText(text);
+
+  const shortPhrases = [
+    "fortell mer",
+    "mer",
+    "utdyp",
+    "kan du utdype",
+    "hvordan da",
+    "hvorfor det",
+    "si mer",
+    "ok",
+    "ja",
+    "interessant",
+    "skjønner",
+    "kan du si mer",
+    "hva mener du",
+    "hvordan det",
+    "hvorfor da"
+  ];
+
+  return normalized.split(" ").length <= 4 || shortPhrases.includes(normalized);
+}
+
+function isContextQuestion(text) {
+  const normalized = normalizeText(text);
+
+  const patterns = [
+    "fortell mer",
+    "utdyp",
+    "si mer",
+    "hva mener du",
+    "hvordan da",
+    "hvorfor det",
+    "kan du forklare",
+    "kan du utdype",
+    "hva betyr det"
+  ];
+
+  return patterns.some(pattern => normalized.includes(pattern));
+}
+
+/* =========================
+   CHATBOT - MATCHING
+========================= */
+
+function scoreMatch(item, userMessage) {
+  const normalizedMessage = normalizeText(userMessage);
+  const keywords = item.keywords || [];
+  const synonyms = item.synonyms || [];
+
+  let score = 0;
+
+  keywords.forEach(word => {
+    const normalizedWord = normalizeText(word);
+    if (!normalizedWord) return;
+
+    if (normalizedMessage === normalizedWord) {
+      score += 5;
+    } else if (normalizedMessage.includes(normalizedWord)) {
+      score += 3;
     }
+  });
 
-    return score;
+  synonyms.forEach(word => {
+    const normalizedWord = normalizeText(word);
+    if (!normalizedWord) return;
+
+    if (normalizedMessage === normalizedWord) {
+      score += 4;
+    } else if (normalizedMessage.includes(normalizedWord)) {
+      score += 2;
+    }
+  });
+
+  return score;
+}
+
+function findBestMatch(userMessage) {
+  const knowledgeBase = getKnowledgeBase();
+  if (!knowledgeBase.length) return null;
+
+  let bestMatch = null;
+  let bestScore = 0;
+
+  knowledgeBase.forEach(item => {
+    const score = scoreMatch(item, userMessage);
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = item;
+    }
+  });
+
+  if ((!bestMatch || bestScore < 2) && chatState.lastIntentId && isShortFollowUp(userMessage)) {
+    return getIntentById(chatState.lastIntentId);
   }
 
-  /* 🔹 FIND BEST MATCH */
-  function findBestMatch(input) {
-    let bestMatch = null;
-    let bestScore = 0;
+  if ((!bestMatch || bestScore < 2) && chatState.lastIntentId && isContextQuestion(userMessage)) {
+    return getIntentById(chatState.lastIntentId);
+  }
 
-    knowledgeBase.forEach((entry) => {
-      const score = scoreEntry(input, entry);
+  return bestScore >= 2 ? bestMatch : null;
+}
 
-      if (score > bestScore) {
-        bestScore = score;
-        bestMatch = entry;
+/* =========================
+   CHATBOT - MER SAMTALETONE
+========================= */
+
+function getTopicBridge(currentIntent) {
+  if (!chatState.lastIntentId || chatState.lastIntentId === currentIntent.id) {
+    return "";
+  }
+
+  const previousIntent = getIntentById(chatState.lastIntentId);
+  if (!previousIntent) return "";
+
+  const bridges = [
+    `Dette henger også sammen med ${previousIntent.title.toLowerCase()}.`,
+    `Dette bygger videre på ${previousIntent.title.toLowerCase()}.`,
+    `Her er det en naturlig kobling til ${previousIntent.title.toLowerCase()}.`
+  ];
+
+  return bridges[Math.floor(Math.random() * bridges.length)];
+}
+
+function buildConversationalIntro(currentIntent, userMessage) {
+  if (
+    chatState.lastIntentId &&
+    currentIntent &&
+    chatState.lastIntentId === currentIntent.id &&
+    (isShortFollowUp(userMessage) || isContextQuestion(userMessage))
+  ) {
+    const intros = [
+      "Ja, jeg kan bygge videre på det.",
+      "Klart – her er litt mer om det.",
+      "Absolutt, jeg utdyper gjerne.",
+      "Ja, la oss gå litt dypere inn i det."
+    ];
+
+    return intros[Math.floor(Math.random() * intros.length)];
+  }
+
+  if (
+    chatState.lastIntentId &&
+    currentIntent &&
+    chatState.lastIntentId !== currentIntent.id
+  ) {
+    const previousIntent = getIntentById(chatState.lastIntentId);
+
+    if (previousIntent) {
+      const intros = [
+        `Du spurte nettopp om ${previousIntent.title.toLowerCase()}, så her er neste del av bildet.`,
+        `Dette henger godt sammen med det du nettopp spurte om.`,
+        `La oss bygge videre fra det forrige spørsmålet ditt.`
+      ];
+
+      return intros[Math.floor(Math.random() * intros.length)];
+    }
+  }
+
+  const defaultIntros = [
+    "Ja, gjerne.",
+    "Klart.",
+    "Her er det viktigste:",
+    "Absolutt.",
+    "Gjerne."
+  ];
+
+  return defaultIntros[Math.floor(Math.random() * defaultIntros.length)];
+}
+
+function buildContextualAnswer(intent, userMessage) {
+  const intro = buildConversationalIntro(intent, userMessage);
+  const bridge = getTopicBridge(intent);
+
+  if (bridge) {
+    return `${intro}\n\n${bridge}\n\n${intent.answer}`;
+  }
+
+  return `${intro}\n\n${intent.answer}`;
+}
+
+/* =========================
+   CHATBOT - FOLLOW-UPS
+========================= */
+
+function getFallbackFollowUps(currentIntentId) {
+  const fallbackMap = {
+    experience: [
+      "Hvilke roller har Johan hatt?",
+      "Hvilke bransjer har han jobbet i?",
+      "Hva er hans sterkeste kompetanseområder?"
+    ],
+    leadership: [
+      "Hvordan beskrives Johan som leder?",
+      "Hvordan jobber han med kultur og folk?",
+      "Hva kjennetegner lederstilen hans?"
+    ],
+    results: [
+      "Hvilke resultater har Johan skapt?",
+      "Har han erfaring med vekst og omstilling?",
+      "Hva har han levert som daglig leder?"
+    ]
+  };
+
+  return fallbackMap[currentIntentId] || [
+    "Hva slags erfaring har Johan?",
+    "Hvordan er Johan som leder?",
+    "Hva kan Johan bidra med?"
+  ];
+}
+
+function getUniqueFollowUps(followUps, currentIntentId) {
+  const previous = new Set(chatState.lastFollowUps || []);
+  const cleaned = (followUps || [])
+    .map(item => (item || "").trim())
+    .filter(Boolean);
+
+  const uniqueNew = cleaned.filter(item => !previous.has(item));
+
+  const result = [...uniqueNew];
+
+  const fallback = getFallbackFollowUps(currentIntentId);
+  fallback.forEach(item => {
+    if (!result.includes(item)) {
+      result.push(item);
+    }
+  });
+
+  return result.slice(0, 3);
+}
+
+/* =========================
+   CHATBOT - RENDERING
+========================= */
+
+function renderMessage(text, sender = "bot") {
+  if (!chatbotMessages) return;
+
+  const message = document.createElement("div");
+  message.className = `chat-message ${sender === "user" ? "chat-message-user" : "chat-message-bot"}`;
+
+  const formattedText = escapeHTML(text).replace(/\n/g, "<br>");
+  message.innerHTML = `<div class="chat-message-bubble">${formattedText}</div>`;
+
+  chatbotMessages.appendChild(message);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+function renderBotMessage(text) {
+  renderMessage(text, "bot");
+}
+
+function renderUserMessage(text) {
+  renderMessage(text, "user");
+}
+
+function clearFollowUps() {
+  if (!chatbotFollowUps) return;
+  chatbotFollowUps.innerHTML = "";
+}
+
+function renderFollowUps(followUps) {
+  if (!chatbotFollowUps) return;
+
+  clearFollowUps();
+
+  followUps.forEach(question => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "chatbot-followup";
+    button.textContent = question;
+
+    button.addEventListener("click", () => {
+      if (chatbotInput) {
+        chatbotInput.value = question;
       }
+      handleChatbotSubmit(question, true);
     });
 
-    return bestScore > 0 ? bestMatch : null;
-  }
-
-  /* 🔹 FORMAT SVAR */
-  function formatAnswer(text) {
-    return text
-      .replace(/\n\n/g, "<br><br>")
-      .replace(/\n• /g, "<br>• ");
-  }
-
-  /* 🔹 FOLLOWUPS */
-function createFollowUps(followUps = []) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "chatbot-suggestions";
-
-  const filtered = followUps.filter((q) => !usedFollowUps.has(q));
-
-  if (!filtered.length) return null;
-
-  filtered.forEach((q) => {
-    usedFollowUps.add(q);
-
-    const btn = document.createElement("button");
-    btn.className = "chat-suggestion";
-    btn.textContent = q;
-
-    btn.onclick = () => {
-      trackCloudflareEvent(`Chatbot Oppfølging: ${q}`);
-      handleQuestion(q);
-    };
-
-    wrapper.appendChild(btn);
+    chatbotFollowUps.appendChild(button);
   });
-
-  return wrapper;
 }
 
-  /* 🔹 MESSAGE */
-  function addMessage(text, sender, followUps = []) {
-    const msg = document.createElement("div");
-    msg.className = `chatbot-message ${sender}`;
-
-    const content = document.createElement("div");
-
-    if (sender === "bot") {
-      content.innerHTML = formatAnswer(text);
-    } else {
-      content.textContent = text;
-    }
-
-    msg.appendChild(content);
-
-    if (sender === "bot") {
-      const fu = createFollowUps(followUps);
-      if (fu) msg.appendChild(fu);
-    }
-
-    chatMessages.appendChild(msg);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  /* 🔹 FALLBACK */
-  function fallback() {
-    return {
-      answer:
-        "Godt spørsmål – det burde jeg egentlig kunne svare på.\n\nPrøv gjerne å spørre om erfaring, lederstil eller hva Johan kan bidra med.",
-      followUps: [
-        "Hva slags erfaring har Johan?",
-        "Hvordan er han som leder?",
-        "Hva kan han bidra med?"
-      ]
-    };
-  }
-
-  /* 🔹 HANDLE QUESTION */
-  function handleQuestion(question) {
-    const q = question.trim();
-    if (!q) return;
-
-    addMessage(q, "user");
-    trackCloudflareEvent(`Chatbot Spørsmål`);
-
-    const match = findBestMatch(q);
-    const response = match ? match : fallback();
-
-    setTimeout(() => {
-      addMessage(response.answer, "bot", response.followUps);
-    }, 200);
-  }
-
-  /* 🔹 FORM */
-  chatForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    handleQuestion(chatInput.value);
-    chatInput.value = "";
-  });
-
-  /* 🔹 SUGGESTIONS */
-  suggestionButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const q = btn.dataset.question || btn.textContent;
-      handleQuestion(q);
-    });
-  });
-});
 /* =========================
-   SCROLL REVEAL
+   CHATBOT - FALLBACK
 ========================= */
 
-const revealItems = document.querySelectorAll(".reveal");
+function getFallbackReply() {
+  if (chatState.lastIntentId) {
+    const lastIntent = getIntentById(chatState.lastIntentId);
 
-const revealObserver = new IntersectionObserver(
-  (entries, observer) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-
-      entry.target.classList.add("visible");
-      observer.unobserve(entry.target);
-    });
-  },
-  {
-    threshold: 0.15
+    if (lastIntent) {
+      return `Jeg er ikke helt sikker på hva du mener, men det kan hende du vil videre i temaet ${lastIntent.title.toLowerCase()}. Du kan også spørre mer konkret om erfaring, lederstil, resultater, bransjer eller hva Johan kan bidra med.`;
+    }
   }
-);
 
-revealItems.forEach((item) => {
-  revealObserver.observe(item);
-});
-
-function normalize(text) {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\sæøå]/gi, "") // fjerner tegn
-    .trim();
+  return "Jeg er ikke helt sikker på hva du mener ennå. Du kan gjerne spørre om erfaring, lederstil, resultater, bransjer eller hva Johan kan bidra med.";
 }
+
 /* =========================
-   EVENTS
+   CHATBOT - HOVEDLOGIKK
 ========================= */
 
-window.addEventListener("scroll", updateGuide);
-window.addEventListener("load", updateGuide);
-window.addEventListener("resize", updateGuide);
+function handleChatbotSubmit(forcedMessage = null, fromFollowUp = false) {
+  if (!chatbotInput && !forcedMessage) return;
+
+  const rawInput = forcedMessage || chatbotInput.value;
+  const userInput = (rawInput || "").trim();
+
+  if (!userInput) return;
+
+  renderUserMessage(userInput);
+
+  if (chatbotInput) {
+    chatbotInput.value = "";
+  }
+
+  const match = findBestMatch(userInput);
+
+  if (match) {
+    const reply = buildContextualAnswer(match, userInput);
+    const followUps = getUniqueFollowUps(match.followUps || [], match.id);
+
+    renderBotMessage(reply);
+    renderFollowUps(followUps);
+
+    updateChatState({
+      intentId: match.id,
+      userMessage: userInput,
+      botAnswer: reply,
+      followUps
+    });
+
+    trackCloudflareEvent(`chatbot_match_${match.id}`);
+  } else {
+    const fallbackReply = getFallbackReply();
+    const fallbackFollowUps = getUniqueFollowUps([], null);
+
+    renderBotMessage(fallbackReply);
+    renderFollowUps(fallbackFollowUps);
+
+    updateChatState({
+      intentId: null,
+      userMessage: userInput,
+      botAnswer: fallbackReply,
+      followUps: fallbackFollowUps
+    });
+
+    trackCloudflareEvent("chatbot_fallback");
+  }
+
+  trackCloudflareEvent(fromFollowUp ? "chatbot_followup_clicked" : "chatbot_user_question");
+}
+
+/* =========================
+   CHATBOT - INIT
+========================= */
+
+if (chatbotForm) {
+  chatbotForm.addEventListener("submit", event => {
+    event.preventDefault();
+    handleChatbotSubmit();
+  });
+}
+
+function initChatbotWelcome() {
+  if (!chatbotMessages) return;
+  if (chatbotMessages.children.length > 0) return;
+
+  const welcomeMessage =
+    "Hei! Jeg kan svare på spørsmål om Johan Jørgen Fossli – for eksempel erfaring, lederstil, resultater, bransjer og hva han kan bidra med.";
+
+  const welcomeFollowUps = [
+    "Hva slags erfaring har Johan?",
+    "Hvordan er Johan som leder?",
+    "Hvilke resultater har han skapt?"
+  ];
+
+  renderBotMessage(welcomeMessage);
+  renderFollowUps(welcomeFollowUps);
+
+  updateChatState({
+    intentId: null,
+    userMessage: "",
+    botAnswer: welcomeMessage,
+    followUps: welcomeFollowUps
+  });
+}
+
+initChatbotWelcome();
