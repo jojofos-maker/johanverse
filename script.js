@@ -57,12 +57,10 @@ menuLinks.forEach((link) => {
 });
 
 /* =========================
-   REVEAL AV SEKSJONER
+   REVEAL
 ========================= */
 
-const revealElements = document.querySelectorAll(
-  ".reveal, .section, .story-card, .result-card, .faq-item, .contact-card"
-);
+const revealElements = document.querySelectorAll(".reveal");
 
 if (revealElements.length) {
   const revealObserver = new IntersectionObserver(
@@ -84,7 +82,7 @@ if (revealElements.length) {
 }
 
 /* =========================
-   CHATBOT
+   CHATBOT DATA
 ========================= */
 
 const chatbotKnowledge = Array.isArray(window.chatbotKnowledgeBase)
@@ -406,15 +404,15 @@ if (chatbotForm && chatbotInput) {
 }
 
 /* =========================
-   STATISKE STARTKNAPPER
+   STATISKE FORSLAGSKNAPPER
 ========================= */
 
-function bindChatbotStarterButtons() {
-  const starterButtons = document.querySelectorAll(".chatbot-starter");
+function bindInitialSuggestionButtons() {
+  const suggestionButtons = document.querySelectorAll(".chat-suggestion");
 
-  starterButtons.forEach((button) => {
+  suggestionButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      const text = button.textContent.trim();
+      const text = button.dataset.question || button.textContent.trim();
 
       if (chatbotInput) {
         chatbotInput.value = text;
@@ -425,19 +423,4 @@ function bindChatbotStarterButtons() {
   });
 }
 
-bindChatbotStarterButtons();
-
-/* =========================
-   OPPSTARTSMELDING
-========================= */
-
-if (chatbotMessages) {
-  addMessage(
-    "Hei! Jeg kan svare på spørsmål om Johan Jørgen Fossli, erfaringen hans, lederstil, resultater, CV og hva han kan bidra med.",
-    "bot"
-  );
-
-  const starterFollowUps = collectGeneralFollowUps();
-  chatbotState.lastSuggestions = starterFollowUps;
-  renderFollowUps(starterFollowUps);
-}
+bindInitialSuggestionButtons();
