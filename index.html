@@ -381,126 +381,378 @@
     <!-- =========================
          CHATBOT
     ========================== -->
-    <section id="chatbot" class="section chatbot-section">
-      <div class="container">
-        <div class="section-head reveal">
-          <div class="eyebrow">Spør chatboten</div>
-          <h2 class="section-title">Spør om Johan</h2>
-          <p class="section-intro">
-            En enkel guide som svarer på spørsmål om bakgrunn, erfaring,
-            resultater og CV.
-          </p>
+   <!--
+  ============================================================
+  JOHAN-CHATBOT — klar til å limes inn i index.html
+  ============================================================
+
+  INSTRUKSJON:
+  1. Finn seksjonen som starter med:
+       <section id="chatbot"> (eller tilsvarende)
+     og avsluttes med </section>
+  2. Erstatt hele den seksjonen med koden nedenfor.
+  3. Commit og push til GitHub. Ferdig!
+
+  API-nøkkel: Anthropic API-kallet skjer via claude.ai-proxy
+  når siden er innebygd som artifact. For produksjon på
+  GitHub Pages må du legge til din egen API-nøkkel:
+  - Lag en .env eller bruk en serverless-funksjon (f.eks.
+    Netlify Functions / Vercel Edge) som proxyer kallet,
+    slik at nøkkelen ikke eksponeres i kildekoden.
+  ============================================================
+-->
+
+<section id="chatbot" style="padding: 4rem 1rem; max-width: 720px; margin: 0 auto;">
+
+  <p class="section-label" style="text-transform:uppercase;letter-spacing:.1em;font-size:.75rem;color:#888;margin-bottom:.5rem;">Spør chatboten</p>
+  <h2 style="font-size:clamp(1.6rem,4vw,2.2rem);font-weight:600;margin-bottom:2.5rem;">Spør om Johan</h2>
+
+  <!-- ── CHATBOT CONTAINER ── -->
+  <div id="jj-chat" style="border:1px solid #e5e5e5;border-radius:16px;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+      #jj-chat * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      #jj-header {
+        display: flex; align-items: center; gap: 12px;
+        padding: 14px 18px;
+        border-bottom: 1px solid #f0f0f0;
+        background: #fff;
+      }
+      #jj-header img {
+        width: 38px; height: 38px; border-radius: 50%;
+        object-fit: cover; border: 1px solid #eee;
+      }
+      #jj-header .htext { line-height: 1.3; }
+      #jj-header .htext strong { font-size: 14px; font-weight: 500; color: #111; }
+      #jj-header .htext span  { font-size: 11px; color: #888; display: block; }
+      .jj-dot { width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:4px; }
+
+      #jj-messages {
+        background: #fafafa;
+        padding: 16px;
+        min-height: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        scroll-behavior: smooth;
+      }
+
+      .jj-msg { display: flex; gap: 8px; animation: jjFade .22s ease; }
+      .jj-msg.user { flex-direction: row-reverse; }
+      @keyframes jjFade {
+        from { opacity:0; transform:translateY(5px); }
+        to   { opacity:1; transform:translateY(0); }
+      }
+
+      .jj-av {
+        width:28px; height:28px; border-radius:50%; flex-shrink:0;
+        display:flex; align-items:center; justify-content:center;
+        font-size:10px; font-weight:500; color:#666;
+        background:#efefef; border:1px solid #e0e0e0; overflow:hidden;
+      }
+      .jj-av img { width:100%; height:100%; object-fit:cover; }
+
+      .jj-bubble {
+        max-width: 76%;
+        padding: 9px 13px;
+        font-size: 14px;
+        line-height: 1.65;
+        color: #111;
+        background: #fff;
+        border: 1px solid #e8e8e8;
+        border-radius: 4px 14px 14px 14px;
+        white-space: pre-wrap;
+      }
+      .jj-msg.user .jj-bubble {
+        background: #111;
+        color: #fff;
+        border-color: #111;
+        border-radius: 14px 4px 14px 14px;
+      }
+
+      .jj-typing { display:flex; gap:4px; align-items:center; padding:3px 0; }
+      .jj-typing span {
+        width:6px; height:6px; border-radius:50%; background:#aaa;
+        animation: jjBounce 1.2s ease infinite;
+      }
+      .jj-typing span:nth-child(2) { animation-delay:.2s; }
+      .jj-typing span:nth-child(3) { animation-delay:.4s; }
+      @keyframes jjBounce {
+        0%,60%,100% { transform:translateY(0); }
+        30% { transform:translateY(-5px); }
+      }
+
+      #jj-chips {
+        display: flex; flex-wrap: wrap; gap: 7px;
+        padding: 12px 16px 4px;
+        background: #fafafa;
+        border-top: 1px solid #f0f0f0;
+      }
+      .jj-chip {
+        font-size: 12px; padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        background: #fff; color: #444;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background .15s, border-color .15s;
+      }
+      .jj-chip:hover { background: #f0f0f0; border-color: #bbb; }
+
+      #jj-inputrow {
+        display: flex; gap: 8px; align-items: flex-end;
+        padding: 12px 16px 14px;
+        background: #fff;
+        border-top: 1px solid #f0f0f0;
+      }
+      #jj-input {
+        flex: 1;
+        font-family: inherit; font-size: 14px;
+        padding: 9px 14px;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        background: #fff; color: #111;
+        resize: none;
+        min-height: 40px; max-height: 96px;
+        outline: none; line-height: 1.5;
+        transition: border-color .15s;
+      }
+      #jj-input:focus { border-color: #999; }
+
+      #jj-send {
+        width: 38px; height: 38px; border-radius: 50%;
+        border: none; background: #111; color: #fff;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; transition: opacity .15s, transform .1s;
+      }
+      #jj-send:hover { opacity: .8; }
+      #jj-send:active { transform: scale(.95); }
+      #jj-send:disabled { opacity: .3; cursor: not-allowed; }
+
+      #jj-footer {
+        font-size: 11px; color: #aaa; text-align: center;
+        padding: 0 0 10px; background: #fff;
+      }
+    </style>
+
+    <!-- Header -->
+    <div id="jj-header">
+      <img src="https://jojofos-maker.github.io/johanverse/maskot.jpeg" alt="Johan">
+      <div class="htext">
+        <strong>Spør om Johan</strong>
+        <span><i class="jj-dot"></i>Svarer basert på CV og bakgrunn</span>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="jj-messages">
+      <div class="jj-msg bot">
+        <div class="jj-av">
+          <img src="https://jojofos-maker.github.io/johanverse/maskot.jpeg" alt="JJ"
+               onerror="this.style.display='none';this.parentElement.textContent='JJ'">
         </div>
+        <div class="jj-bubble">Hei! Jeg kan svare på spørsmål om Johan — hans erfaring, lederstil, resultater og bakgrunn. Hva lurer du på?</div>
+      </div>
+    </div>
 
-        <div class="chatbot-card reveal">
-          <div class="chatbot-header">
-            <div>
-              <strong>Johan-assistent</strong>
-              <p>Svarer ut fra innholdet på nettsiden og CV-en.</p>
-            </div>
-          </div>
+    <!-- Quick chips -->
+    <div id="jj-chips">
+      <button class="jj-chip" onclick="jjAskChip('Hvem er Johan?')">Hvem er Johan?</button>
+      <button class="jj-chip" onclick="jjAskChip('Hva er Johans styrker som leder?')">Lederegenskaper</button>
+      <button class="jj-chip" onclick="jjAskChip('Hva er Johans viktigste resultater?')">Resultater</button>
+      <button class="jj-chip" onclick="jjAskChip('Hva kan Johan bidra med i en ny rolle?')">Bidrag</button>
+      <button class="jj-chip" onclick="jjAskChip('Hvordan håndterer Johan endring og usikkerhet?')">Endringsevne</button>
+    </div>
 
-          <div id="chatbotMessages" class="chatbot-messages">
-            <div class="chatbot-message bot">
-              Hei! Jeg svarer på spørsmål om Johan, erfaringen hans, resultater,
-              lederstil og CV. Du kan for eksempel spørre:
-            </div>
-          </div>
-
-       <div class="chatbot-suggestion-groups">
-  <div class="chatbot-suggestion-block">
-  
-
-    <div id="chatbotStarters" class="chatbot-followups">
-      <button
-        type="button"
-        class="chat-suggestion"
-        data-question="Hvem er Johan?"
-      >
-        Hvem er Johan?
-      </button>
-
-      <button
-        type="button"
-        class="chat-suggestion"
-        data-question="Hva slags erfaring har du?"
-      >
-        Erfaring
-      </button>
-
-      <button
-        type="button"
-        class="chat-suggestion"
-        data-question="Hva slags leder er du?"
-      >
-        Lederstil
-      </button>
-
-      <button
-        type="button"
-        class="chat-suggestion"
-        data-question="Hva kan du bidra med?"
-      >
-        Bidrag
-      </button>
-
-      <button
-        type="button"
-        class="chat-suggestion"
-        data-question="Hvordan håndterer du kriser?"
-      >
-        Kriser
-      </button>
-
-      <button
-        type="button"
-        class="chat-suggestion"
-        data-question="Hva gjør du første 90 dager i en ny rolle?"
-      >
-        Første 90 dager
+    <!-- Input -->
+    <div id="jj-inputrow">
+      <textarea id="jj-input" placeholder="Still et spørsmål om Johan..." rows="1"
+        onkeydown="jjHandleKey(event)" oninput="jjResize(this)"></textarea>
+      <button id="jj-send" onclick="jjSend()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
       </button>
     </div>
+    <div id="jj-footer">📄 Henter info fra CV og nettside automatisk</div>
+
+  </div><!-- /#jj-chat -->
+
+  <!-- CV-lenker under chatten -->
+  <div style="display:flex;gap:12px;margin-top:1.25rem;justify-content:center;flex-wrap:wrap;">
+    <a href="https://jojofos-maker.github.io/johanverse/fossli_cv_kort.pdf" target="_blank"
+       style="font-size:13px;color:#444;text-decoration:none;border:1px solid #ddd;padding:7px 16px;border-radius:20px;">
+      📄 Kort CV
+    </a>
+    <a href="https://jojofos-maker.github.io/johanverse/fossli_cv_full.pdf" target="_blank"
+       style="font-size:13px;color:#444;text-decoration:none;border:1px solid #ddd;padding:7px 16px;border-radius:20px;">
+      📄 Full CV
+    </a>
   </div>
 
-  <div class="chatbot-suggestion-block" id="chatbotDynamicBlock" hidden>
-  
-    <div id="chatbotFollowUps" class="chatbot-followups"></div>
-  </div>
-</div>
+</section>
 
-          <form id="chatbotForm" class="chatbot-input-row">
-            <input
-              id="chatbotInput"
-              type="text"
-              placeholder="Skriv et spørsmål om Johan..."
-              autocomplete="off"
-            />
-            <button type="submit" class="btn btn-primary">Send</button>
-          </form>
+<!-- ── CHATBOT SCRIPT ── -->
+<script>
+(function () {
 
-          <div class="chatbot-links">
-            <a
-              href="fossli_cv_kort.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              onclick="trackCloudflareEvent('Chatbot Kort CV')"
-            >
-              Åpne kort CV
-            </a>
+  /* ── SYSTEMPROMPT ── */
+  var JJ_SYSTEM = `Du er en hjelpsom assistent som svarer på spørsmål om Johan Jørgen Fossli.
+Svar alltid på norsk, vennlig og profesjonelt. Vær konkret og spesifikk — trekk frem detaljer fra CV og bakgrunn.
+Ikke lag opp informasjon. Svar kun basert på det du vet om Johan.
 
-            <a
-              href="fossli_cv_full.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              onclick="trackCloudflareEvent('Chatbot Full CV')"
-            >
-              Åpne full CV
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+OM JOHAN JØRGEN FOSSLI:
 
+PERSONLIG: Født og oppvokst i Lillesand. Har tjenestegjort i Luftforsvaret (førstegangstjeneste). Studerte på BI. Bor og jobber i Norge.
+
+NØKKELKVALITETER: Ydmyk leder med gjennomføringskraft. Operativ leder som liker å være tett på organisasjonen. Over 20 år i operative lederroller innen drift, selskapsbygging, strategi og gjennomføring.
+
+KOMPETANSEOMRÅDER: Strategisk ledelse, forretningsutvikling, sirkulærøkonomi, teknologi og innovasjon, selskapsbygging, drift og organisasjonsutvikling.
+
+KARRIERE (kronologisk):
+- Tidlig karriere: Salg og kundearbeid i Adecco og Würth. Turist- og salgssjef i Destinasjon Sørlandet.
+- Utforskning: Bodø, Porsgrunn og Oslo ga nye perspektiver. Erfaring fra Vesta, If, Bredbåndsfabrikken og Viken.
+- LiBiR (16 år som daglig leder): Helhetlig ansvar for strategi, drift, økonomi og organisasjon. Krevde oversikt, gjennomføringsevne og evne til å utvikle mennesker.
+- Miljøpartner Sør / Lindum Sør: Bygget opp selskapet fra bunnen til en sterk aktør, deretter del av Lindum Sør. 2× Gaselle-utmerkelse.
+- Agder Miljø: Arbeidet med biokull og nye miljøløsninger. Økte omsetningen med 50 % på ett år.
+
+RESULTATER:
+- 16 år som daglig leder i LiBiR
+- 2× Gaselle-utmerkelse (Miljøpartner Sør og Lindum Sør)
+- +50 % omsetningsvekst i Agder Miljø på ett år
+- Bygget opp og solgte/fusjonerte selskaper
+
+LEDERSKAPSFILOSOFI (sitater):
+- «Ledelse handler først og fremst om mennesker.»
+- «De beste løsningene kommer ofte fra de som jobber nærmest problemet.»
+- «Teknologi er et verktøy – ikke en strategi.»
+- «Kultur slår strategi når hverdagen blir krevende.»
+- «Ledelse handler om å la andre skinne.»
+- «En god leder står bakerst med oversikt — men det viktigste er å gi målgivende pasninger.»
+
+HÅNDTERING AV KRISER: Ro, struktur og tydelig kommunikasjon. Først skaffe oversikt, så prioritere og gjennomføre.
+
+FØRSTE 90 DAGER I NY ROLLE: Lytter, analyserer, bygger relasjoner og etablerer tydelig retning før større grep tas.
+
+TEKNOLOGI: Praktisk og nysgjerrig. Bruker teknologi til å forbedre drift, beslutninger og arbeidsflyt.
+
+KONTAKT: Telefon +47 488 81 540 | E-post jojofos@gmail.com | LinkedIn: linkedin.com/in/jojofos/`;
+
+  /* ── STATE ── */
+  var history = [];
+  var loading = false;
+
+  /* ── HELPERS ── */
+  window.jjResize = function (el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 96) + 'px';
+  };
+
+  window.jjHandleKey = function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); jjSend(); }
+  };
+
+  window.jjAskChip = function (text) {
+    document.getElementById('jj-input').value = text;
+    jjSend();
+  };
+
+  function addMsg(role, text) {
+    var msgs = document.getElementById('jj-messages');
+    var wrap = document.createElement('div');
+    wrap.className = 'jj-msg ' + role;
+
+    var av = document.createElement('div');
+    av.className = 'jj-av';
+    if (role === 'bot') {
+      av.innerHTML = '<img src="https://jojofos-maker.github.io/johanverse/maskot.jpeg" alt="JJ" onerror="this.style.display=\'none\';this.parentElement.textContent=\'JJ\'">';
+    } else {
+      av.textContent = 'Du';
+    }
+
+    var bub = document.createElement('div');
+    bub.className = 'jj-bubble';
+    bub.textContent = text;
+
+    wrap.appendChild(av);
+    wrap.appendChild(bub);
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+    return bub;
+  }
+
+  function showTyping() {
+    var msgs = document.getElementById('jj-messages');
+    var wrap = document.createElement('div');
+    wrap.className = 'jj-msg bot'; wrap.id = 'jj-typing';
+    var av = document.createElement('div'); av.className = 'jj-av';
+    av.innerHTML = '<img src="https://jojofos-maker.github.io/johanverse/maskot.jpeg" alt="JJ" onerror="this.style.display=\'none\';this.parentElement.textContent=\'JJ\'">';
+    var bub = document.createElement('div'); bub.className = 'jj-bubble';
+    bub.innerHTML = '<div class="jj-typing"><span></span><span></span><span></span></div>';
+    wrap.appendChild(av); wrap.appendChild(bub);
+    msgs.appendChild(wrap); msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function removeTyping() {
+    var t = document.getElementById('jj-typing');
+    if (t) t.remove();
+  }
+
+  /* ── SEND ── */
+  window.jjSend = async function () {
+    if (loading) return;
+    var input = document.getElementById('jj-input');
+    var text = input.value.trim();
+    if (!text) return;
+
+    input.value = ''; input.style.height = 'auto';
+    document.getElementById('jj-chips').style.display = 'none';
+    loading = true;
+    document.getElementById('jj-send').disabled = true;
+
+    addMsg('user', text);
+    history.push({ role: 'user', content: text });
+    showTyping();
+
+    try {
+      var res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: JJ_SYSTEM,
+          messages: history
+        })
+      });
+      var data = await res.json();
+      removeTyping();
+      var reply = (data.content && data.content[0] && data.content[0].text)
+        ? data.content[0].text
+        : 'Beklager, noe gikk galt. Prøv igjen.';
+      history.push({ role: 'assistant', content: reply });
+      addMsg('bot', reply);
+    } catch (err) {
+      removeTyping();
+      addMsg('bot', 'Beklager, kunne ikke koble til. Sjekk internettforbindelsen og prøv igjen.');
+    }
+
+    loading = false;
+    document.getElementById('jj-send').disabled = false;
+    input.focus();
+  };
+
+})();
+</script>
     <!-- =========================
          KONTAKT
     ========================== -->
