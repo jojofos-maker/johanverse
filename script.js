@@ -250,7 +250,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!chatForm || !chatInput || !chatMessages) return;
 
-  const knowledgeBase = window.chatbotKnowledgeBase || [];
+  const knowledgeBase = Array.isArray(window.chatbotKnowledgeBase)
+    ? window.chatbotKnowledgeBase
+    : [];
 
   function normalizeText(text) {
     return text
@@ -287,13 +289,31 @@ document.addEventListener("DOMContentLoaded", () => {
       .sort((a, b) => b.score - a.score);
   }
 
-  function createFollowUpButtons(followUps) {
-    if (!followUps || !followUps.length) return null;
+  function cleanFollowUps(followUps = [], currentQuestion = "") {
+    const seen = new Set();
+    const normalizedCurrent = normalizeText(currentQuestion);
+
+    return followUps.filter((question) => {
+      const normalized = normalizeText(question);
+
+      if (!normalized) return false;
+      if (normalized === normalizedCurrent) return false;
+      if (seen.has(normalized)) return false;
+
+      seen.add(normalized);
+      return true;
+    });
+  }
+
+  function createFollowUpButtons(followUps, currentQuestion) {
+    const cleanedFollowUps = cleanFollowUps(followUps, currentQuestion);
+
+    if (!cleanedFollowUps.length) return null;
 
     const wrapper = document.createElement("div");
     wrapper.className = "chatbot-suggestions";
 
-    followUps.forEach((question) => {
+    cleanedFollowUps.forEach((question) => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "chat-suggestion";
@@ -310,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return wrapper;
   }
 
-  function addMessage(text, sender, followUps = []) {
+  function addMessage(text, sender, followUps = [], currentQuestion = "") {
     const message = document.createElement("div");
     message.className = `chatbot-message ${sender}`;
 
@@ -319,7 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
     message.appendChild(textNode);
 
     if (sender === "bot") {
-      const followUpButtons = createFollowUpButtons(followUps);
+      const followUpButtons = createFollowUpButtons(followUps, currentQuestion);
       if (followUpButtons) {
         message.appendChild(followUpButtons);
       }
@@ -330,6 +350,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getBotReply(question) {
+    if (!knowledgeBase.length) {
+      return {
+        text: "Chatboten mangler kunnskapsgrunnlag akkurat nå. Sjekk at chatbot-data.js er lastet inn før script.js.",
+        followUps: []
+      };
+    }
+
     const matches = findBestMatches(question);
     const best = matches[0];
     const second = matches[1];
@@ -348,13 +375,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (second && second.score >= 3 && second.id !== best.id) {
       return {
         text: `${best.answer} ${second.answer}`,
-        followUps: best.followUps || []
+        followUps: best.followUps || [],
+        topic: best.title || ""
       };
     }
 
     return {
       text: best.answer,
-      followUps: best.followUps || []
+      followUps: best.followUps || [],
+      topic: best.title || ""
     };
   }
 
@@ -368,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const reply = getBotReply(cleanQuestion);
 
     setTimeout(() => {
-      addMessage(reply.text, "bot", reply.followUps);
+      addMessage(reply.text, "bot", reply.followUps, cleanQuestion);
     }, 220);
   }
 
