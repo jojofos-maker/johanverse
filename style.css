@@ -450,34 +450,19 @@ a {
 .results-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
+  gap: 1.25rem;
+  align-items: stretch;
 }
 
 .result-card {
-  background: #f7f5f1;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--line);
   border-radius: 24px;
-  padding: 1.25rem;
+  padding: 1rem;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
   overflow: hidden;
-}
-
-.result-card-image {
-  width: 100%;
-  aspect-ratio: 16 / 10; /* litt lavere enn før */
-  border-radius: 16px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-  background: #e9e4db;
-}
-
-.result-card-image img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-.result-card {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -486,27 +471,47 @@ a {
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
 }
 
+.result-card-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 0.9rem;
+  background: #e9e4db;
+}
+
 .result-card-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
   transition: transform 0.4s ease;
 }
 
 .result-card:hover .result-card-image img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
+
 .result-number {
-  margin: 0 0 0.5rem;
-  font-size: 2.25rem;
-  font-weight: 800;
-  line-height: 1;
-  color: #4f8f73;
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--green);
 }
 
 .result-card h3 {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.65rem;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .result-card p:last-child {
-  margin-bottom: 0;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 1rem;
 }
 
 @media (max-width: 900px) {
@@ -514,15 +519,6 @@ a {
     grid-template-columns: 1fr;
   }
 }
-
-.result-value {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--green);
-  margin-bottom: 10px;
-}
-
 .insight-list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
