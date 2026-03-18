@@ -9,7 +9,7 @@ const guideOpen = document.getElementById("guideOpen");
 const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
 
 /* =========================
-   HJELPEFUNKSJON FOR TRACKING
+   TRACKING
 ========================= */
 
 function trackCloudflareEvent(name) {
@@ -22,7 +22,7 @@ function trackCloudflareEvent(name) {
 window.trackCloudflareEvent = trackCloudflareEvent;
 
 /* =========================
-   TEKSTER FOR STICKY GUIDE
+   STICKY GUIDE TEKSTER
 ========================= */
 
 const sections = [
@@ -39,6 +39,10 @@ const sections = [
     text: "Her kan du få et inntrykk av hvordan jeg tenker som leder."
   },
   {
+    id: "chatbot",
+    text: "Her kan du stille korte spørsmål om erfaring, resultater, lederstil og CV."
+  },
+  {
     id: "kontakt",
     text: "Fikk du lyst til å ta en prat? Her finner du kontaktinfo."
   }
@@ -51,12 +55,7 @@ const sections = [
 function setActiveMenu(sectionId) {
   menuLinks.forEach((link) => {
     const target = link.getAttribute("href").replace("#", "");
-
-    if (target === sectionId) {
-      link.classList.add("active");
-    } else {
-      link.classList.remove("active");
-    }
+    link.classList.toggle("active", target === sectionId);
   });
 }
 
@@ -66,8 +65,9 @@ function setActiveMenu(sectionId) {
 
 function updateGuide() {
   const scrollY = window.scrollY;
+  const guideClosed = localStorage.getItem("guideClosed") === "true";
 
-  if (localStorage.getItem("guideClosed") !== "true") {
+  if (!guideClosed) {
     if (scrollY > 220) {
       stickyGuide?.classList.add("visible");
     } else {
@@ -139,7 +139,7 @@ menuLinks.forEach((link) => {
 });
 
 /* =========================
-   LUKK / ÅPNE GUIDE
+   GUIDE ÅPNE / LUKKE
 ========================= */
 
 if (localStorage.getItem("guideClosed") === "true") {
@@ -152,6 +152,7 @@ guideClose?.addEventListener("click", () => {
     stickyGuide.classList.remove("visible");
     stickyGuide.style.display = "none";
   }
+
   guideOpen?.classList.add("visible");
   localStorage.setItem("guideClosed", "true");
   trackCloudflareEvent("Guide Lukket");
@@ -162,6 +163,7 @@ guideOpen?.addEventListener("click", () => {
     stickyGuide.style.display = "flex";
     stickyGuide.classList.add("visible");
   }
+
   guideOpen?.classList.remove("visible");
   localStorage.setItem("guideClosed", "false");
   trackCloudflareEvent("Guide Åpnet");
@@ -169,7 +171,7 @@ guideOpen?.addEventListener("click", () => {
 });
 
 /* =========================
-   SECTION INSIGHTS
+   SECTION TRACKING
 ========================= */
 
 const trackedSections = new Set();
@@ -178,6 +180,7 @@ const insightSections = [
   { id: "historien", event: "Section Historien" },
   { id: "resultater", event: "Section Resultater" },
   { id: "faq", event: "Section FAQ" },
+  { id: "chatbot", event: "Section Chatbot" },
   { id: "kontakt", event: "Section Kontakt" }
 ];
 
@@ -190,8 +193,7 @@ const sectionObserver = new IntersectionObserver(
         (section) => section.id === entry.target.id
       );
 
-      if (!match) return;
-      if (trackedSections.has(match.event)) return;
+      if (!match || trackedSections.has(match.event)) return;
 
       trackedSections.add(match.event);
       trackCloudflareEvent(match.event);
@@ -208,7 +210,7 @@ insightSections.forEach((section) => {
 });
 
 /* =========================
-   FAQ INSIGHTS
+   FAQ TRACKING
 ========================= */
 
 const faqItems = document.querySelectorAll(".faq-list details");
@@ -218,9 +220,10 @@ faqItems.forEach((item) => {
     if (!item.open) return;
 
     const summary = item.querySelector("summary");
-    if (!summary) return;
+    const question = summary?.textContent.trim();
 
-    const question = summary.textContent.trim();
+    if (!question) return;
+
     trackCloudflareEvent(`FAQ: ${question}`);
   });
 });
@@ -250,16 +253,14 @@ revealItems.forEach((item) => {
 });
 
 /* =========================
-   EVENTS
+   CHATBOT
 ========================= */
 
-window.addEventListener("scroll", updateGuide);
-window.addEventListener("load", updateGuide);
-window.addEventListener("resize", updateGuide);
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const chatForm = document.getElementById("chatForm");
   const chatInput = document.getElementById("chatInput");
   const chatMessages = document.getElementById("chatMessages");
+  const suggestionButtons = document.querySelectorAll(".chat-suggestion");
 
   if (!chatForm || !chatInput || !chatMessages) return;
 
@@ -272,13 +273,13 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     {
       id: "experience",
-      keywords: ["erfaring", "cv", "karriere", "jobbet", "ledererfaring", "toppleder"],
+      keywords: ["erfaring", "karriere", "jobbet", "ledererfaring", "toppleder"],
       answer:
-        "Johan har 25+ års erfaring som toppleder og operativ leder. Han har jobbet med strategi, drift, økonomi og organisasjon, og har erfaring med å bygge opp selskaper, skape vekst og lede virksomheter frem til salg og fusjon."
+        "Johan har over 25 års erfaring som toppleder og operativ leder. Han har jobbet med strategi, drift, økonomi og organisasjon, og har erfaring med å bygge opp selskaper, skape vekst og lede virksomheter frem til salg og fusjon."
     },
     {
       id: "libir",
-      keywords: ["libir", "libr", "daglig leder", "renovasjon", "lillesand", "birkenes"],
+      keywords: ["libir", "daglig leder", "renovasjon", "lillesand", "birkenes"],
       answer:
         "Johan var daglig leder i LiBiR IKS i 16 år. LiBiR er et interkommunalt renovasjonsselskap eid av Lillesand og Birkenes. I rollen hadde han helhetlig ansvar for strategi, drift, økonomi og organisasjon."
     },
@@ -286,11 +287,11 @@ document.addEventListener("DOMContentLoaded", function () {
       id: "results",
       keywords: ["resultat", "resultater", "gjennomføring", "gaselle", "vekst", "agder miljø", "miljøpartner", "lindum sør"],
       answer:
-        "Noen av resultatene som løftes frem på siden er: 16 år som daglig leder i LiBiR, 2× Gaselle knyttet til Miljøpartner Sør og Lindum Sør, og +50 % omsetningsvekst i Agder Miljø. Gaselle-diplomet gjelder Lindum Sør i 2019."
+        "Noen av resultatene som løftes frem på siden er 16 år som daglig leder i LiBiR, 2× Gaselle knyttet til Miljøpartner Sør og Lindum Sør, og +50 % omsetningsvekst i Agder Miljø. Gaselle-diplomet gjelder Lindum Sør i 2019."
     },
     {
       id: "leadership",
-      keywords: ["leder", "lederstil", "ledelse", "filosofi", "hvordan er johan som leder"],
+      keywords: ["leder", "lederstil", "ledelse", "filosofi", "kriser", "mennesker"],
       answer:
         "Johan beskrives som en operativ leder som liker å være tett på organisasjonen, skape retning og få resultater gjennom mennesker. Han er opptatt av ro, struktur, tydelig kommunikasjon, kultur og å la andre skinne."
     },
@@ -308,15 +309,15 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     {
       id: "contact",
-      keywords: ["kontakt", "epost", "e-post", "linkedin", "ta kontakt", "intervju"],
+      keywords: ["kontakt", "epost", "e-post", "linkedin", "ta kontakt", "intervju", "telefon"],
       answer:
-        "Du kan ta kontakt via kontaktseksjonen på siden eller via LinkedIn. Målet med siden er å gjøre det enkelt å invitere Johan til en prat eller et intervju."
+        "Du kan ta kontakt via kontaktseksjonen på siden, på e-post, telefon eller LinkedIn. Målet med siden er å gjøre det enkelt å invitere Johan til en prat eller et intervju."
     },
     {
       id: "cv",
       keywords: ["cv", "resume", "pdf", "kort cv", "full cv"],
       answer:
-        "Det ligger PDF-versjoner av CV i repoet: en kortversjon og en fullversjon. Du kan gjerne lenke dem tydelig inn i chatbot-seksjonen også, slik at brukeren raskt finner riktig CV."
+        "Du finner både kort CV og full CV som PDF på siden. Lenker ligger både i chatbot-seksjonen og i kontaktseksjonen."
     }
   ];
 
@@ -331,13 +332,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function scoreQuestion(question, item) {
-    const normalized = normalizeText(question);
+    const normalizedQuestion = normalizeText(question);
     let score = 0;
 
     item.keywords.forEach((keyword) => {
       const normalizedKeyword = normalizeText(keyword);
-      if (normalized.includes(normalizedKeyword)) {
-        score += normalizedKeyword.split(" ").length > 1 ? 3 : 1;
+
+      if (normalizedQuestion.includes(normalizedKeyword)) {
+        score += normalizedKeyword.includes(" ") ? 3 : 1;
       }
     });
 
@@ -352,11 +354,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }))
       .sort((a, b) => b.score - a.score);
 
-    if (ranked[0].score > 0) {
+    if (ranked.length && ranked[0].score > 0) {
       return ranked[0].answer;
     }
 
-    return "Det har jeg ikke nok informasjon om ennå. Prøv gjerne å spørre om erfaring, LiBiR, resultater, lederstil eller CV. Du kan også se FAQ-en eller kontakte Johan direkte.";
+    return "Det har jeg ikke nok informasjon om ennå. Prøv gjerne å spørre om erfaring, LiBiR, resultater, lederstil, teknologi eller CV. Du kan også se FAQ-en eller kontakte Johan direkte.";
   }
 
   function addMessage(text, sender) {
@@ -367,33 +369,41 @@ document.addEventListener("DOMContentLoaded", function () {
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
-  function handleQuestion(question) {
+  function handleQuestion(question, source = "typed") {
     const cleanQuestion = question.trim();
+
     if (!cleanQuestion) return;
 
     addMessage(cleanQuestion, "user");
+    trackCloudflareEvent(`Chatbot Spørsmål: ${source}`);
 
     const reply = getBotReply(cleanQuestion);
 
     setTimeout(() => {
       addMessage(reply, "bot");
     }, 250);
-
-    // Valgfri tracking dersom du allerede bruker Cloudflare events eller egen tracking:
-    // if (window.plausible) plausible("chat_question");
-    // if (window.umami) window.umami.track("chat_question");
   }
 
-  chatForm.addEventListener("submit", function (e) {
+  chatForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    handleQuestion(chatInput.value);
+    handleQuestion(chatInput.value, "typed");
     chatInput.value = "";
+    chatInput.focus();
   });
 
-  document.querySelectorAll(".chat-suggestion").forEach((button) => {
-    button.addEventListener("click", function () {
-      const question = this.dataset.question;
-      handleQuestion(question);
+  suggestionButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const question = button.dataset.question || button.textContent || "";
+      trackCloudflareEvent(`Chatbot Forslag: ${question}`);
+      handleQuestion(question, "suggestion");
     });
   });
 });
+
+/* =========================
+   EVENTS
+========================= */
+
+window.addEventListener("scroll", updateGuide);
+window.addEventListener("load", updateGuide);
+window.addEventListener("resize", updateGuide);
