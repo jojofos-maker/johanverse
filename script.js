@@ -168,3 +168,47 @@ const revealObserver = new IntersectionObserver(
 revealItems.forEach((item) => {
   revealObserver.observe(item);
 });
+/* =========================
+   SECTION INSIGHTS
+========================= */
+
+const trackedSections = new Set();
+
+const insightSections = [
+  { id: "historien", event: "Section Historien" },
+  { id: "resultater", event: "Section Resultater" },
+  { id: "faq", event: "Section FAQ" },
+  { id: "kontakt", event: "Section Kontakt" }
+];
+
+function trackCloudflareEvent(name) {
+  if (window.cloudflare && window.cloudflare.insights) {
+    window.cloudflare.insights.track(name);
+  }
+}
+
+const sectionObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+
+      const match = insightSections.find(
+        (section) => section.id === entry.target.id
+      );
+
+      if (!match) return;
+      if (trackedSections.has(match.event)) return;
+
+      trackedSections.add(match.event);
+      trackCloudflareEvent(match.event);
+    });
+  },
+  {
+    threshold: 0.35
+  }
+);
+
+insightSections.forEach((section) => {
+  const el = document.getElementById(section.id);
+  if (el) sectionObserver.observe(el);
+});
