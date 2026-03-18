@@ -440,7 +440,12 @@ revealItems.forEach((item) => {
   revealObserver.observe(item);
 });
 
-
+function normalize(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\sæøå]/gi, "") // fjerner tegn
+    .trim();
+}
 /* =========================
    EVENTS
 ========================= */
