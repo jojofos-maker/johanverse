@@ -402,3 +402,14 @@ if (chatbotMessages) {
   chatbotState.lastSuggestions = starterFollowUps;
   renderFollowUps(starterFollowUps);
 }
+/* =========================
+   STATISKE START-KNAPPER
+========================= */
+
+document.querySelectorAll(".chatbot-followup").forEach((button) => {
+  button.addEventListener("click", () => {
+    const text = button.textContent;
+    chatbotInput.value = text;
+    handleChatbotMessage(text);
+  });
+});
