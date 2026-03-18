@@ -3,8 +3,8 @@ window.chatbotKnowledgeBase = [
   {
     id: "intro",
     title: "Om Johan",
-    keywords: ["johan", "hvem", "profil"],
-    synonyms: ["fortell", "hvem er han", "hvem er johan", "person"],
+keywords: ["hvem er johan", "hvem er johan jørgen fossli"],
+synonyms: ["fortell om johan", "presenter johan"],
     answer:
       "Johan Jørgen Fossli er en erfaren leder med over 25 års bakgrunn fra ledelse og drift.\n\nHan har jobbet både strategisk og operativt, og er kjent for å kombinere tydelig retning med gjennomføringsevne.\n\nDette er en side hvor han presenterer seg selv som kandidat.",
     followUps: [
