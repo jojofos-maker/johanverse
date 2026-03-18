@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="no">
-<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "31e43baba8a64c498aa9babb1de9ba12"}'></script><!-- End Cloudflare Web Analytics -->
-  <head>
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JJ historien</title>
@@ -9,13 +8,20 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
 
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Cloudflare Web Analytics -->
+  <script
+    defer
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token": "31e43baba8a64c498aa9babb1de9ba12"}'
+  ></script>
+  <!-- End Cloudflare Web Analytics -->
 </head>
 
 <body>
@@ -58,8 +64,21 @@
         </p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#historien">Start historien</a>
-          <a class="btn btn-secondary" href="#kontakt">Ta kontakt</a>
+          <a
+            class="btn btn-primary"
+            href="#historien"
+            onclick="trackEvent('Hero Start historien')"
+          >
+            Start historien
+          </a>
+
+          <a
+            class="btn btn-secondary"
+            href="#kontakt"
+            onclick="trackEvent('Hero Ta kontakt')"
+          >
+            Ta kontakt
+          </a>
         </div>
       </div>
 
@@ -357,7 +376,11 @@
         </div>
 
         <div class="contact-actions">
-          <a class="btn btn-primary btn-icon" href="mailto:jojofos@gmail.com">
+          <a
+            class="btn btn-primary btn-icon"
+            href="mailto:jojofos@gmail.com"
+            onclick="trackEvent('Kontakt E-post')"
+          >
             <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
               <path d="M4 6h16v12H4z" stroke="currentColor" fill="none" stroke-width="2"></path>
               <path d="M4 7l8 6 8-6" stroke="currentColor" fill="none" stroke-width="2"></path>
@@ -370,6 +393,7 @@
             href="https://wa.me/4748881540"
             target="_blank"
             rel="noopener noreferrer"
+            onclick="trackEvent('Kontakt WhatsApp')"
           >
             <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
               <path
@@ -379,26 +403,31 @@
             </svg>
             <span>WhatsApp</span>
           </a>
-<a
-  class="btn btn-primary btn-icon"
-  href="fossli_cv_kort.pdf"
-  target="_blank"
->
-  <span>📄 Kort CV</span>
-</a>
 
-<a
-  class="btn btn-secondary btn-icon"
-  href="fossli_cv_full.pdf"
-  target="_blank"
->
-  <span>📄 Full CV</span>
-</a>
+          <a
+            class="btn btn-primary btn-icon"
+            href="fossli_cv_kort.pdf"
+            target="_blank"
+            onclick="trackEvent('Kontakt Kort CV')"
+          >
+            <span>📄 Kort CV</span>
+          </a>
+
+          <a
+            class="btn btn-secondary btn-icon"
+            href="fossli_cv_full.pdf"
+            target="_blank"
+            onclick="trackEvent('Kontakt Full CV')"
+          >
+            <span>📄 Full CV</span>
+          </a>
+
           <a
             class="btn btn-secondary btn-icon"
             href="https://www.linkedin.com/in/jojofos/"
             target="_blank"
             rel="noopener noreferrer"
+            onclick="trackEvent('Kontakt LinkedIn')"
           >
             <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
               <path
@@ -408,7 +437,6 @@
             </svg>
             <span>LinkedIn</span>
           </a>
-        
         </div>
       </div>
     </section>
@@ -428,6 +456,14 @@
   <button id="guideOpen" class="guide-open">
     Snakk med Johan
   </button>
+
+  <script>
+    function trackEvent(name) {
+      if (window.cloudflare && window.cloudflare.insights) {
+        window.cloudflare.insights.track(name);
+      }
+    }
+  </script>
 
   <script src="script.js"></script>
 </body>
