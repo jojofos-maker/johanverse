@@ -39,7 +39,14 @@ const chatbotInput = document.getElementById("chatbotInput");
       trackCloudflareEvent("sticky_opened");
     });
   }
+if (stickyGuide) {
+  stickyGuide.addEventListener("click", (event) => {
+    const clickedClose = event.target.closest("#guideClose");
+    if (clickedClose) return;
 
+    openChatbotFromGuide();
+  });
+}
   /* =========================
      SMOOTH SCROLL
   ========================== */
