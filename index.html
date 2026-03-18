@@ -372,110 +372,111 @@
       </div>
     </section>
 
-    <!-- =========================
-         CHATBOT
-    ========================== -->
-    <section id="chatbot" class="section chatbot-section">
-      <div class="container">
-        <div class="section-head">
-          <div class="eyebrow">Spør chatboten</div>
-          <h2>Spør om Johan</h2>
-          <p>
-            En enkel guide som svarer på spørsmål om bakgrunn, erfaring,
-            resultater og CV.
-          </p>
+  <!-- =========================
+     CHATBOT
+========================== -->
+<section id="chatbot" class="section chatbot-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Spør chatboten</div>
+      <h2>Spør om Johan</h2>
+      <p>
+        En enkel guide som svarer på spørsmål om bakgrunn, erfaring,
+        resultater og CV.
+      </p>
+    </div>
+
+    <div class="chatbot-card">
+      <div class="chatbot-header">
+        <div>
+          <strong>Johan-assistent</strong>
+          <p>Svarer ut fra innholdet på nettsiden og CV-en.</p>
         </div>
+      </div>
 
-        <div class="chatbot-card">
-          <div class="chatbot-header">
-            <div>
-              <strong>Johan-assistent</strong>
-              <p>Svarer ut fra innholdet på nettsiden og CV-en.</p>
-            </div>
-          </div>
-
-          <div id="chatMessages" class="chatbot-messages">
-            <div class="chatbot-message bot">
-              Hei! Jeg svarer på spørsmål om Johan, erfaringen hans, resultater, lederstil og CV. Du kan for eksempel spørre:
-              <div class="chatbot-suggestions">
-                <button
-                  type="button"
-                  class="chat-suggestion"
-                  data-question="Hvem er Johan Jørgen Fossli?"
-                >
-                  Hvem er Johan?
-                </button>
-                <button
-                  type="button"
-                  class="chat-suggestion"
-                  data-question="Hva slags erfaring har Johan?"
-                >
-                  Erfaring
-                </button>
-                <button
-                  type="button"
-                  class="chat-suggestion"
-                  data-question="Hva har Johan gjort i LiBiR?"
-                >
-                  LiBiR
-                </button>
-                <button
-                  type="button"
-                  class="chat-suggestion"
-                  data-question="Hva er de viktigste resultatene hans?"
-                >
-                  Resultater
-                </button>
-                <button
-                  type="button"
-                  class="chat-suggestion"
-                  data-question="Hvordan er Johan som leder?"
-                >
-                  Lederstil
-                </button>
-                <button
-                  type="button"
-                  class="chat-suggestion"
-                  data-question="Hvor finner jeg CV-en?"
-                >
-                  CV
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <form id="chatForm" class="chatbot-input-row">
-            <input
-              id="chatInput"
-              type="text"
-              placeholder="Skriv et spørsmål om Johan..."
-              autocomplete="off"
-            />
-            <button type="submit">Send</button>
-          </form>
-
-          <div class="chatbot-links">
-            <a
-              href="fossli_cv_kort.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              onclick="trackCloudflareEvent('Chatbot Kort CV')"
+      <div id="chatbotMessages" class="chatbot-messages">
+        <div class="chatbot-message bot">
+          Hei! Jeg svarer på spørsmål om Johan, erfaringen hans, resultater, lederstil og CV. Du kan for eksempel spørre:
+          <div class="chatbot-suggestions">
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hvem er Johan Jørgen Fossli?"
             >
-              Åpne kort CV
-            </a>
-            <a
-              href="fossli_cv_full.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              onclick="trackCloudflareEvent('Chatbot Full CV')"
+              Hvem er Johan?
+            </button>
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hva slags erfaring har Johan?"
             >
-              Åpne full CV
-            </a>
+              Erfaring
+            </button>
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hva har Johan gjort i LiBiR?"
+            >
+              LiBiR
+            </button>
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hva er de viktigste resultatene hans?"
+            >
+              Resultater
+            </button>
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hvordan er Johan som leder?"
+            >
+              Lederstil
+            </button>
+            <button
+              type="button"
+              class="chat-suggestion"
+              data-question="Hvor finner jeg CV-en?"
+            >
+              CV
+            </button>
           </div>
         </div>
       </div>
-    </section>
 
+      <form id="chatbotForm" class="chatbot-input-row">
+        <input
+          id="chatbotInput"
+          type="text"
+          placeholder="Skriv et spørsmål om Johan..."
+          autocomplete="off"
+        />
+        <button type="submit">Send</button>
+      </form>
+
+      <div id="chatbotFollowUps" class="chatbot-followups"></div>
+
+      <div class="chatbot-links">
+        <a
+          href="fossli_cv_kort.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          onclick="trackCloudflareEvent('Chatbot Kort CV')"
+        >
+          Åpne kort CV
+        </a>
+        <a
+          href="fossli_cv_full.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          onclick="trackCloudflareEvent('Chatbot Full CV')"
+        >
+          Åpne full CV
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
     <!-- =========================
          KONTAKT
     ========================== -->
