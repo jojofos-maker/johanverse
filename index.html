@@ -724,7 +724,7 @@ KONTAKT: Telefon +47 488 81 540 | E-post jojofos@gmail.com | LinkedIn: linkedin.
     showTyping();
 
     try {
-      var res = await fetch('https://api.anthropic.com/v1/messages', {
+      var res = await fetch('https://johan-proxy.jojofos.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
