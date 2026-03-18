@@ -8,10 +8,20 @@ const guideClose = document.getElementById("guideClose");
 const guideOpen = document.getElementById("guideOpen");
 const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
 
-const chatbotMessages = document.getElementById("chatbotMessages");
-const chatbotForm = document.getElementById("chatbotForm");
-const chatbotInput = document.getElementById("chatbotInput");
+const chatbotMessages =
+  document.getElementById("chatMessages") ||
+  document.getElementById("chatbotMessages");
+
+const chatbotForm =
+  document.getElementById("chatForm") ||
+  document.getElementById("chatbotForm");
+
+const chatbotInput =
+  document.getElementById("chatInput") ||
+  document.getElementById("chatbotInput");
+
 const chatbotFollowUps = document.getElementById("chatbotFollowUps");
+const chatSuggestionButtons = document.querySelectorAll(".chat-suggestion");
 
 /* =========================
    TRACKING
@@ -84,15 +94,14 @@ function escapeHTML(text) {
     .replace(/>/g, "&gt;");
 }
 
-function capitalizeFirst(text) {
-  if (!text) return "";
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
 function getKnowledgeBase() {
   return Array.isArray(window.chatbotKnowledgeBase)
     ? window.chatbotKnowledgeBase
     : [];
+}
+
+function getIntentById(intentId) {
+  return getKnowledgeBase().find(item => item.id === intentId) || null;
 }
 
 /* =========================
@@ -117,10 +126,6 @@ function updateChatState({ intentId, userMessage, botAnswer, followUps = [] }) {
     chatState.recentIntentIds.push(intentId);
     chatState.recentIntentIds = [...new Set(chatState.recentIntentIds)].slice(-5);
   }
-}
-
-function getIntentById(intentId) {
-  return getKnowledgeBase().find(item => item.id === intentId) || null;
 }
 
 /* =========================
@@ -280,8 +285,8 @@ function buildConversationalIntro(currentIntent, userMessage) {
     if (previousIntent) {
       const intros = [
         `Du spurte nettopp om ${previousIntent.title.toLowerCase()}, så her er neste del av bildet.`,
-        `Dette henger godt sammen med det du nettopp spurte om.`,
-        `La oss bygge videre fra det forrige spørsmålet ditt.`
+        "Dette henger godt sammen med det du nettopp spurte om.",
+        "La oss bygge videre fra det forrige spørsmålet ditt."
       ];
 
       return intros[Math.floor(Math.random() * intros.length)];
@@ -347,10 +352,9 @@ function getUniqueFollowUps(followUps, currentIntentId) {
     .filter(Boolean);
 
   const uniqueNew = cleaned.filter(item => !previous.has(item));
-
   const result = [...uniqueNew];
-
   const fallback = getFallbackFollowUps(currentIntentId);
+
   fallback.forEach(item => {
     if (!result.includes(item)) {
       result.push(item);
@@ -360,40 +364,10 @@ function getUniqueFollowUps(followUps, currentIntentId) {
   return result.slice(0, 3);
 }
 
-/* =========================
-   CHATBOT - RENDERING
-========================= */
-
-function renderMessage(text, sender = "bot") {
-  if (!chatbotMessages) return;
-
-  const message = document.createElement("div");
-  message.className = `chat-message ${sender === "user" ? "chat-message-user" : "chat-message-bot"}`;
-
-  const formattedText = escapeHTML(text).replace(/\n/g, "<br>");
-  message.innerHTML = `<div class="chat-message-bubble">${formattedText}</div>`;
-
-  chatbotMessages.appendChild(message);
-  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-}
-
-function renderBotMessage(text) {
-  renderMessage(text, "bot");
-}
-
-function renderUserMessage(text) {
-  renderMessage(text, "user");
-}
-
-function clearFollowUps() {
-  if (!chatbotFollowUps) return;
-  chatbotFollowUps.innerHTML = "";
-}
-
 function renderFollowUps(followUps) {
   if (!chatbotFollowUps) return;
 
-  clearFollowUps();
+  chatbotFollowUps.innerHTML = "";
 
   followUps.forEach(question => {
     const button = document.createElement("button");
@@ -410,6 +384,31 @@ function renderFollowUps(followUps) {
 
     chatbotFollowUps.appendChild(button);
   });
+}
+
+/* =========================
+   CHATBOT - RENDERING
+========================= */
+
+function renderMessage(text, sender = "bot") {
+  if (!chatbotMessages) return;
+
+  const message = document.createElement("div");
+  message.className = `chatbot-message ${sender}`;
+
+  const formattedText = escapeHTML(text).replace(/\n/g, "<br>");
+  message.innerHTML = formattedText;
+
+  chatbotMessages.appendChild(message);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+function renderBotMessage(text) {
+  renderMessage(text, "bot");
+}
+
+function renderUserMessage(text) {
+  renderMessage(text, "user");
 }
 
 /* =========================
@@ -444,6 +443,7 @@ function handleChatbotSubmit(forcedMessage = null, fromFollowUp = false) {
 
   if (chatbotInput) {
     chatbotInput.value = "";
+    chatbotInput.focus();
   }
 
   const match = findBestMatch(userInput);
@@ -484,6 +484,26 @@ function handleChatbotSubmit(forcedMessage = null, fromFollowUp = false) {
 }
 
 /* =========================
+   CHATBOT - EKSISTERENDE FORSLAGSKNAPPER
+========================= */
+
+if (chatSuggestionButtons.length) {
+  chatSuggestionButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const question = button.dataset.question || button.textContent || "";
+      if (!question.trim()) return;
+
+      if (chatbotInput) {
+        chatbotInput.value = question;
+      }
+
+      handleChatbotSubmit(question, true);
+      trackCloudflareEvent("chatbot_suggestion_clicked");
+    });
+  });
+}
+
+/* =========================
    CHATBOT - INIT
 ========================= */
 
@@ -493,29 +513,3 @@ if (chatbotForm) {
     handleChatbotSubmit();
   });
 }
-
-function initChatbotWelcome() {
-  if (!chatbotMessages) return;
-  if (chatbotMessages.children.length > 0) return;
-
-  const welcomeMessage =
-    "Hei! Jeg kan svare på spørsmål om Johan Jørgen Fossli – for eksempel erfaring, lederstil, resultater, bransjer og hva han kan bidra med.";
-
-  const welcomeFollowUps = [
-    "Hva slags erfaring har Johan?",
-    "Hvordan er Johan som leder?",
-    "Hvilke resultater har han skapt?"
-  ];
-
-  renderBotMessage(welcomeMessage);
-  renderFollowUps(welcomeFollowUps);
-
-  updateChatState({
-    intentId: null,
-    userMessage: "",
-    botAnswer: welcomeMessage,
-    followUps: welcomeFollowUps
-  });
-}
-
-initChatbotWelcome();
