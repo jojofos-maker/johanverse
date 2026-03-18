@@ -18,6 +18,9 @@ function trackCloudflareEvent(name) {
   }
 }
 
+/* Gjør funksjonen tilgjengelig for inline onclick i HTML */
+window.trackCloudflareEvent = trackCloudflareEvent;
+
 /* =========================
    TEKSTER FOR STICKY GUIDE
 ========================= */
@@ -64,10 +67,12 @@ function setActiveMenu(sectionId) {
 function updateGuide() {
   const scrollY = window.scrollY;
 
-  if (scrollY > 220) {
-    stickyGuide?.classList.add("visible");
-  } else {
-    stickyGuide?.classList.remove("visible");
+  if (localStorage.getItem("guideClosed") !== "true") {
+    if (scrollY > 220) {
+      stickyGuide?.classList.add("visible");
+    } else {
+      stickyGuide?.classList.remove("visible");
+    }
   }
 
   let currentText = "Hei! Jeg følger deg nedover siden.";
@@ -109,7 +114,8 @@ function updateGuide() {
 
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
   link.addEventListener("click", (e) => {
-    const target = document.querySelector(link.getAttribute("href"));
+    const href = link.getAttribute("href");
+    const target = document.querySelector(href);
 
     if (!target) return;
 
@@ -118,6 +124,17 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
       behavior: "smooth",
       block: "start"
     });
+  });
+});
+
+/* =========================
+   NAV TRACKING
+========================= */
+
+menuLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    const target = link.getAttribute("href").replace("#", "");
+    trackCloudflareEvent(`Nav: ${target}`);
   });
 });
 
@@ -131,15 +148,23 @@ if (localStorage.getItem("guideClosed") === "true") {
 }
 
 guideClose?.addEventListener("click", () => {
-  if (stickyGuide) stickyGuide.style.display = "none";
+  if (stickyGuide) {
+    stickyGuide.classList.remove("visible");
+    stickyGuide.style.display = "none";
+  }
   guideOpen?.classList.add("visible");
   localStorage.setItem("guideClosed", "true");
+  trackCloudflareEvent("Guide Lukket");
 });
 
 guideOpen?.addEventListener("click", () => {
-  if (stickyGuide) stickyGuide.style.display = "flex";
+  if (stickyGuide) {
+    stickyGuide.style.display = "flex";
+    stickyGuide.classList.add("visible");
+  }
   guideOpen?.classList.remove("visible");
   localStorage.setItem("guideClosed", "false");
+  trackCloudflareEvent("Guide Åpnet");
   updateGuide();
 });
 
@@ -207,11 +232,12 @@ faqItems.forEach((item) => {
 const revealItems = document.querySelectorAll(".reveal");
 
 const revealObserver = new IntersectionObserver(
-  (entries) => {
+  (entries, observer) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-      }
+      if (!entry.isIntersecting) return;
+
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target);
     });
   },
   {
