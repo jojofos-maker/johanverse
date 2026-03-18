@@ -133,123 +133,130 @@ function openChatbotFromGuide() {
     });
   });
 
-  /* =========================
-     CHATBOT
-  ========================== */
+/* =========================
+   CHATBOT
+========================= */
 
-  const messagesEl = document.getElementById("chatbotMessages");
-  const form = document.getElementById("chatbotForm");
-  const input = document.getElementById("chatbotInput");
-  const followUpsEl = document.getElementById("chatbotFollowUps");
+const messagesEl = document.getElementById("chatbotMessages");
+const form = document.getElementById("chatbotForm");
+const input = document.getElementById("chatbotInput");
+const followUpsEl = document.getElementById("chatbotFollowUps");
 
-  if (!messagesEl || !form || !input) return;
+if (!messagesEl || !form || !input) return;
 
-  let lastAnswerId = null;
+let lastAnswerId = null;
 
-  function addMessage(text, sender = "bot") {
-    const msg = document.createElement("div");
-    msg.className = "chatbot-message " + sender;
-    msg.textContent = text;
-    messagesEl.appendChild(msg);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
+function addMessage(text, sender = "bot") {
+  const msg = document.createElement("div");
+  msg.className = "chatbot-message " + sender;
+  msg.textContent = text;
+  messagesEl.appendChild(msg);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
 
-  function scoreQuestion(q, item) {
-    let score = 0;
+function scoreQuestion(q, item) {
+  let score = 0;
+  const text = q.toLowerCase();
 
-    const text = q.toLowerCase();
+  item.keywords?.forEach(k => {
+    if (text.includes(k.toLowerCase())) score += 2;
+  });
 
-    item.keywords?.forEach(k => {
-      if (text.includes(k)) score += 2;
-    });
+  item.synonyms?.forEach(s => {
+    if (text.includes(s.toLowerCase())) score += 1;
+  });
 
-    item.synonyms?.forEach(s => {
-      if (text.includes(s)) score += 1;
-    });
+  return score;
+}
 
-    return score;
-  }
+function findBestAnswer(question) {
+  if (!window.chatbotKnowledgeBase) return null;
 
-  function findBestAnswer(question) {
-    if (!window.chatbotKnowledgeBase) return null;
+  let best = null;
+  let bestScore = 0;
 
-    let best = null;
-    let bestScore = 0;
+  window.chatbotKnowledgeBase.forEach(item => {
+    const score = scoreQuestion(question, item);
 
-    window.chatbotKnowledgeBase.forEach(item => {
-      const score = scoreQuestion(question, item);
-
-      if (score > bestScore) {
-        bestScore = score;
-        best = item;
-      }
-    });
-
-    return bestScore > 0 ? best : null;
-  }
-
-  function showFollowUps(list) {
-    if (!followUpsEl) return;
-
-    followUpsEl.innerHTML = "";
-
-    if (!list || !list.length) return;
-
-    list.slice(0, 4).forEach(q => {
-      const btn = document.createElement("button");
-      btn.className = "chat-suggestion";
-      btn.textContent = q;
-      btn.addEventListener("click", () => {
-        input.value = q;
-        form.dispatchEvent(new Event("submit"));
-      });
-      followUpsEl.appendChild(btn);
-    });
-  }
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const question = input.value.trim();
-    if (!question) return;
-
-    addMessage(question, "user");
-
-    const answer = findBestAnswer(question);
-
-    if (answer) {
-      addMessage(answer.answer, "bot");
-
-      if (answer.id !== lastAnswerId) {
-        showFollowUps(answer.followUps);
-        lastAnswerId = answer.id;
-      }
-    } else {
-      addMessage("Godt spørsmål — det bør jeg kunne svare bedre på. Prøv å spørre om erfaring, lederstil eller resultater.", "bot");
-      showFollowUps([
-        "Hva slags erfaring har Johan?",
-        "Hvordan er Johan som leder?",
-        "Hva er de viktigste resultatene?"
-      ]);
+    if (score > bestScore) {
+      bestScore = score;
+      best = item;
     }
-
-    trackCloudflareEvent("chat_question");
-
-    input.value = "";
   });
 
-  /* =========================
-     SUGGESTION KNAPPER
-  ========================== */
+  return bestScore > 0 ? best : null;
+}
 
-  document.querySelectorAll(".chat-suggestion").forEach(btn => {
+function showFollowUps(list) {
+  if (!followUpsEl) return;
+
+  followUpsEl.innerHTML = "";
+
+  if (!list || !list.length) return;
+
+  list.slice(0, 4).forEach(q => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "chat-suggestion";
+    btn.textContent = q;
+
     btn.addEventListener("click", () => {
-      const q = btn.dataset.question;
-      if (!q) return;
-
-      input.value = q;
-      form.dispatchEvent(new Event("submit"));
+      askQuestion(q);
     });
+
+    followUpsEl.appendChild(btn);
   });
+}
+
+function askQuestion(question) {
+  const cleanQuestion = question.trim();
+  if (!cleanQuestion) return;
+
+  addMessage(cleanQuestion, "user");
+
+  const answer = findBestAnswer(cleanQuestion);
+
+  if (answer) {
+    addMessage(answer.answer, "bot");
+
+    if (answer.id !== lastAnswerId) {
+      showFollowUps(answer.followUps);
+      lastAnswerId = answer.id;
+    }
+  } else {
+    addMessage(
+      "Godt spørsmål — det bør jeg kunne svare bedre på. Prøv å spørre om erfaring, lederstil eller hva Johan kan bidra med.",
+      "bot"
+    );
+
+    showFollowUps([
+      "Hvem er Johan?",
+      "Hva slags erfaring har du?",
+      "Hva slags leder er du?",
+      "Hva kan du bidra med?"
+    ]);
+  }
+
+  trackCloudflareEvent("chat_question");
+  input.value = "";
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  askQuestion(input.value);
+});
+
+/* =========================
+   SUGGESTION KNAPPER
+========================= */
+
+document.querySelectorAll(".chat-suggestion").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const q = btn.dataset.question || btn.textContent;
+    if (!q) return;
+
+    askQuestion(q);
+  });
+});
 
 });
