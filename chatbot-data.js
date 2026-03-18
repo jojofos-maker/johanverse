@@ -191,4 +191,101 @@ window.chatbotKnowledgeBase = [
       "Hvordan er Johan som leder?"
     ]
   }
+  ,
+  {
+    id: "upbringing",
+    title: "Oppvekst",
+    keywords: ["oppvekst", "lillesand", "barndom", "sorlandet", "sørlandet", "hvor kommer johan fra"],
+    answer:
+      "Johan er født og oppvokst i Lillesand. Han beskriver oppveksten som viktig for å forme nysgjerrighet, arbeidsvilje og gleden av å få ting til sammen med andre.",
+    followUps: [
+      "Hva slags erfaring har Johan?",
+      "Hvordan er Johan som leder?",
+      "Hva har formet Johan som leder?"
+    ]
+  },
+  {
+    id: "explorer-phase",
+    title: "Utforskerfasen",
+    keywords: ["bodo", "bodø", "porsgrunn", "oslo", "utforskerfasen", "luftforsvaret", "bi", "vesta", "if", "bredbandsfabrikken", "bredbåndsfabrikken", "viken"],
+    answer:
+      "Johan beskriver årene i Bodø, Porsgrunn og Oslo som en viktig utforskerfase. Førstegangstjeneste i Luftforsvaret, studier på BI og jobber i blant annet Vesta, If, Bredbåndsfabrikken og Viken ga nye perspektiver og gjorde ham tryggere på hva slags leder han ønsket å bli.",
+    followUps: [
+      "Hva slags erfaring har Johan?",
+      "Hva har formet Johan som leder?",
+      "Hvordan er Johan som leder?"
+    ]
+  },
+  {
+    id: "early-career",
+    title: "Tidlige jobber",
+    keywords: ["adecco", "wurth", "würth", "destinasjon sørlandet", "de forste jobbene", "de første jobbene", "salg", "bemanning", "turistsjef", "salgssjef"],
+    answer:
+      "Tidlig i karrieren jobbet Johan med salg, bemanning og kundearbeid hos blant annet Adecco, Würth og Destinasjon Sørlandet. Han trekker frem at dette lærte ham mye om relasjoner, service og forretning.",
+    followUps: [
+      "Hva slags erfaring har Johan?",
+      "Hvordan er Johan som leder?",
+      "Hva kan Johan bidra med?"
+    ]
+  },
+  {
+    id: "miljopartner",
+    title: "Miljøpartner Sør",
+    keywords: ["miljopartner sør", "miljøpartner sør", "miljopartner", "miljøpartner"],
+    answer:
+      "Miljøpartner Sør trekkes frem som en viktig del av Johans erfaring med selskapsbygging. Han var med på å bygge opp virksomheten til en sterk aktør, før videre utvikling mot Lindum Sør.",
+    followUps: [
+      "Hva betyr 2× Gaselle?",
+      "Hva menes med salg og fusjon?",
+      "Hva er de viktigste resultatene hans?"
+    ]
+  },
+  {
+    id: "lindum-sor",
+    title: "Lindum Sør",
+    keywords: ["lindum sør", "lindum", "fusjon", "gaselle 2019"],
+    answer:
+      "Lindum Sør er en viktig del av historien om vekst og videreutvikling i Johans karriere. Gaselle-diplomet som vises på siden gjelder Lindum Sør i 2019.",
+    followUps: [
+      "Hva betyr 2× Gaselle?",
+      "Hva menes med salg og fusjon?",
+      "Hva er de viktigste resultatene hans?"
+    ]
+  },
+  {
+    id: "leadership-values",
+    title: "Verdier i ledelse",
+    keywords: ["verdier", "verdigrunnlag", "lederverdier", "hva star johan for", "hva står johan for", "lederskapsfilosofi"],
+    answer:
+      "Johan løfter særlig frem mennesker, kultur, tydelighet og gjennomføring. Han tror på å være tett på organisasjonen, skape retning og få andre til å lykkes.",
+    followUps: [
+      "Hvordan er Johan som leder?",
+      "Hvordan håndterer Johan kriser?",
+      "Hva kan Johan bidra med?"
+    ]
+  },
+  {
+    id: "why-johan",
+    title: "Hvorfor Johan",
+    keywords: ["hvorfor johan", "hvorfor ansette johan", "hvorfor velge johan", "hvorfor skal vi velge johan"],
+    answer:
+      "Det som særlig kjennetegner Johan er kombinasjonen av lang ledererfaring, operativ gjennomføringsevne og erfaring med å bygge og utvikle virksomheter. Han kombinerer strategi, drift, økonomi og organisasjon med en tydelig menneskelig lederstil.",
+    followUps: [
+      "Hva kan Johan bidra med?",
+      "Hva slags erfaring har Johan?",
+      "Hva er de viktigste resultatene hans?"
+    ]
+  },
+  {
+    id: "what-shaped-him",
+    title: "Hva har formet Johan",
+    keywords: ["hva har formet johan", "hva har preget johan", "hvordan ble johan leder", "formet som leder"],
+    answer:
+      "Både oppveksten i Lillesand, årene utenfor Sørlandet og erfaringene fra tidlige jobber har vært med på å forme Johan. Han trekker særlig frem nysgjerrighet, arbeidsvilje, relasjoner og praktisk erfaring som viktige byggesteiner.",
+    followUps: [
+      "Hvordan er Johan som leder?",
+      "Hva slags erfaring har Johan?",
+      "Hvor kommer Johan fra?"
+    ]
+  }
 ];
