@@ -464,7 +464,7 @@ a {
 
 .result-card-image {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10; /* litt lavere enn før */
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 1rem;
@@ -477,7 +477,22 @@ a {
   display: block;
   object-fit: cover;
 }
+.result-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
 
+.result-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+.result-card-image img {
+  transition: transform 0.4s ease;
+}
+
+.result-card:hover .result-card-image img {
+  transform: scale(1.05);
+}
 .result-number {
   margin: 0 0 0.5rem;
   font-size: 2.25rem;
