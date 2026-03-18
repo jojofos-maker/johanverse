@@ -141,6 +141,7 @@ const messagesEl = document.getElementById("chatbotMessages");
 const form = document.getElementById("chatbotForm");
 const input = document.getElementById("chatbotInput");
 const followUpsEl = document.getElementById("chatbotFollowUps");
+const dynamicFollowUpsBlock = document.getElementById("chatbotDynamicBlock");
 
 if (!messagesEl || !form || !input) {
   console.error("Chatbot init stoppet:", {
@@ -202,13 +203,23 @@ function showFollowUps(list) {
 
   followUpsEl.innerHTML = "";
 
-  if (!list || !list.length) return;
+  if (!list || !list.length) {
+    if (dynamicFollowUpsBlock) {
+      dynamicFollowUpsBlock.hidden = true;
+    }
+    return;
+  }
+
+  if (dynamicFollowUpsBlock) {
+    dynamicFollowUpsBlock.hidden = false;
+  }
 
   list.slice(0, 4).forEach(q => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "chat-suggestion";
     btn.textContent = q;
+    btn.dataset.question = q;
 
     btn.addEventListener("click", () => {
       askQuestion(q);
