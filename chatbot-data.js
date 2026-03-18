@@ -3,10 +3,10 @@ window.chatbotKnowledgeBase = [
   {
     id: "intro",
     title: "Om Johan",
-keywords: ["hvem er johan", "hvem er johan jørgen fossli"],
-synonyms: ["fortell om johan", "presenter johan"],
+    keywords: ["hvem er johan", "hvem er johan jørgen fossli"],
+    synonyms: ["fortell om johan", "presenter johan"],
     answer:
-      "Johan Jørgen Fossli er en erfaren leder med over 25 års bakgrunn fra ledelse og drift.\n\nHan har jobbet både strategisk og operativt, og er kjent for å kombinere tydelig retning med gjennomføringsevne.\n\nDette er en side hvor han presenterer seg selv som kandidat.",
+      "Kort fortalt:\n\nJohan Jørgen Fossli er en erfaren leder med over 25 års bakgrunn fra å lede, utvikle og forbedre virksomheter.\n\nHan kombinerer strategi og gjennomføring – og er vant til å skape resultater gjennom andre.",
     followUps: [
       "Hva slags erfaring har han?",
       "Hvordan er han som leder?",
@@ -20,7 +20,7 @@ synonyms: ["fortell om johan", "presenter johan"],
     keywords: ["erfaring", "karriere"],
     synonyms: ["jobbet", "arbeid", "cv", "bakgrunn", "historie"],
     answer:
-      "Johan har over 25 års erfaring som toppleder og operativ leder.\n\nHan har blant annet jobbet med:\n• strategi og forretningsutvikling\n• drift og økonomi\n• organisasjonsutvikling\n\nHan har erfaring med å bygge opp selskaper, snu virksomheter og skape vekst.",
+      "Han har jobbet bredt – men alltid i lederroller.\n\nErfaringen hans dekker:\n• drift og økonomi\n• strategi og forretningsutvikling\n• organisasjonsutvikling\n\nKort sagt: han har både sett helheten og stått i gjennomføringen.",
     followUps: [
       "Hvilke resultater har han skapt?",
       "Hva kan han bidra med?",
@@ -32,9 +32,9 @@ synonyms: ["fortell om johan", "presenter johan"],
     id: "results",
     title: "Resultater",
     keywords: ["resultater", "prestasjoner"],
-    synonyms: ["oppnådd", "skapt", "levert", "suksess", "case"],
+    synonyms: ["oppnådd", "skapt", "levert", "suksess"],
     answer:
-      "Gjennom karrieren har Johan levert solide resultater i flere virksomheter.\n\nEksempler inkluderer:\n• forbedret lønnsomhet\n• utviklet organisasjoner\n• gjennomført strategiske endringer\n\nHan er opptatt av målbare resultater – ikke bare planer.",
+      "Han er først og fremst opptatt av resultater – ikke bare planer.\n\nGjennom karrieren har han blant annet:\n• forbedret lønnsomhet\n• utviklet organisasjoner\n• gjennomført endringer som faktisk gir effekt\n\nHan måler seg selv på hva som faktisk blir levert.",
     followUps: [
       "Hva slags erfaring har han?",
       "Hva kan han bidra med?",
@@ -45,14 +45,14 @@ synonyms: ["fortell om johan", "presenter johan"],
   {
     id: "leader",
     title: "Lederstil",
-    keywords: ["leder", "lederstil"],
+    keywords: ["lederstil", "leder"],
     synonyms: ["sjef", "ledertype", "hvordan er han", "personlighet"],
     answer:
-      "Johan beskrives som en tydelig og inkluderende leder.\n\nHan:\n• setter retning og forventninger\n• bygger team og kultur\n• følger opp og skaper fremdrift\n\nHan kombinerer struktur og relasjon – og får folk med seg.",
+      "Han er en leder som kombinerer tydelighet med tillit.\n\nDet betyr at han:\n• setter klare forventninger\n• involverer folk\n• følger opp det som er viktig\n\nMålet er alltid det samme: fremdrift og eierskap i organisasjonen.",
     followUps: [
       "Hva kan han bidra med?",
       "Hva slags erfaring har han?",
-      "Hvordan jobber han i praksis?"
+      "Hvilke resultater har han skapt?"
     ]
   },
 
@@ -62,7 +62,7 @@ synonyms: ["fortell om johan", "presenter johan"],
     keywords: ["bidra", "verdi"],
     synonyms: ["styrker", "kompetanse", "hva kan han gjøre", "hva får vi"],
     answer:
-      "Johan kan bidra med både strategisk retning og operativ gjennomføring.\n\nTypisk bidrag:\n• struktur og tydelig ledelse\n• forbedring av drift og lønnsomhet\n• utvikling av organisasjon og kultur\n\nHan går raskt inn i situasjoner og skaper fremdrift.",
+      "Hvis du ansetter Johan, får du en som raskt skaper struktur og fremdrift.\n\nTypisk bidrar han med:\n• tydelig retning\n• bedre drift og lønnsomhet\n• sterkere team og kultur\n\nHan er ikke bare rådgiver – han leverer i praksis.",
     followUps: [
       "Hva slags erfaring har han?",
       "Hvordan er han som leder?",
@@ -73,10 +73,10 @@ synonyms: ["fortell om johan", "presenter johan"],
   {
     id: "contact",
     title: "Kontakt",
-    keywords: ["kontakt", "nå", "epost", "telefon"],
+    keywords: ["kontakt", "epost", "telefon"],
     synonyms: ["ta kontakt", "snakke", "mail", "ringe"],
     answer:
-      "Du kan enkelt ta kontakt med Johan via kontaktskjemaet på siden.\n\nDer finner du også lenker til:\n• CV (kort og full versjon)\n• kontaktinformasjon\n\nHan er åpen for dialog om relevante muligheter.",
+      "Du kan enkelt ta kontakt med Johan via kontaktskjemaet på siden.\n\nDer finner du også:\n• lenke til CV (kort og full)\n• kontaktinformasjon\n\nHan er åpen for en uforpliktende prat om relevante muligheter.",
     followUps: [
       "Kan jeg se CV-en hans?",
       "Hva kan han bidra med?",
@@ -88,9 +88,9 @@ synonyms: ["fortell om johan", "presenter johan"],
     id: "cv",
     title: "CV",
     keywords: ["cv"],
-    synonyms: ["resume", "erfaring pdf", "last ned cv"],
+    synonyms: ["resume", "last ned cv", "erfaring pdf"],
     answer:
-      "Du finner CV-en til Johan på siden.\n\nDer kan du velge mellom:\n• en kort versjon\n• en fullstendig versjon\n\nBegge gir en god oversikt over erfaring og kompetanse.",
+      "CV-en ligger tilgjengelig på siden.\n\nDu kan velge mellom:\n• en kort versjon (rask oversikt)\n• en full versjon (detaljer)\n\nBegge gir et godt bilde av erfaringen og resultatene hans.",
     followUps: [
       "Hva slags erfaring har han?",
       "Hva kan han bidra med?",
