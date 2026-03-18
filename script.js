@@ -167,6 +167,16 @@ guideOpen?.addEventListener("click", () => {
   guideOpen?.classList.remove("visible");
   localStorage.setItem("guideClosed", "false");
   trackCloudflareEvent("Guide Åpnet");
+  trackCloudflareEvent("Guide Open Scroll Chatbot");
+
+  const chatbotSection = document.getElementById("chatbot");
+  if (chatbotSection) {
+    chatbotSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
   updateGuide();
 });
 
