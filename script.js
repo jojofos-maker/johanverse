@@ -142,7 +142,15 @@ const form = document.getElementById("chatbotForm");
 const input = document.getElementById("chatbotInput");
 const followUpsEl = document.getElementById("chatbotFollowUps");
 
-if (!messagesEl || !form || !input) return;
+if (!messagesEl || !form || !input) {
+  console.error("Chatbot init stoppet:", {
+    messagesEl,
+    form,
+    input,
+    followUpsEl
+  });
+  return;
+}
 
 let lastAnswerId = null;
 
