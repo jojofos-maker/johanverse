@@ -415,20 +415,27 @@ document.addEventListener("DOMContentLoaded", () => {
     return score;
   }
 
-  function getBotReply(question) {
-    const ranked = knowledgeBase
-      .map((item) => ({
-        ...item,
-        score: scoreQuestion(question, item)
-      }))
-      .sort((a, b) => b.score - a.score);
+function getBotReply(question) {
+  const ranked = knowledgeBase
+    .map((item) => ({
+      ...item,
+      score: scoreQuestion(question, item)
+    }))
+    .sort((a, b) => b.score - a.score);
 
-    if (ranked.length && ranked[0].score > 0) {
-      return ranked[0].answer;
+  const best = ranked[0];
+  const secondBest = ranked[1];
+
+  if (best && best.score > 0) {
+    if (secondBest && secondBest.score >= 3 && secondBest.id !== best.id) {
+      return `${best.answer} ${secondBest.answer}`;
     }
 
-    return "Det har jeg ikke nok informasjon om ennå. Prøv gjerne å spørre om erfaring, LiBiR, resultater, lederstil, teknologi eller CV. Du kan også se FAQ-en eller kontakte Johan direkte.";
+    return best.answer;
   }
+
+  return "Det har jeg ikke nok informasjon om ennå. Prøv gjerne å spørre om erfaring, LiBiR, resultater, lederstil, teknologi, første 90 dager eller CV. Du kan også se FAQ-en eller kontakte Johan direkte.";
+}
 
   function addMessage(text, sender) {
     const message = document.createElement("div");
