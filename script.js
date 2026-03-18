@@ -9,6 +9,16 @@ const guideOpen = document.getElementById("guideOpen");
 const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
 
 /* =========================
+   HJELPEFUNKSJON FOR TRACKING
+========================= */
+
+function trackCloudflareEvent(name) {
+  if (window.cloudflare && window.cloudflare.insights) {
+    window.cloudflare.insights.track(name);
+  }
+}
+
+/* =========================
    TEKSTER FOR STICKY GUIDE
 ========================= */
 
@@ -54,7 +64,6 @@ function setActiveMenu(sectionId) {
 function updateGuide() {
   const scrollY = window.scrollY;
 
-  // Vis sticky guide etter litt scroll
   if (scrollY > 220) {
     stickyGuide?.classList.add("visible");
   } else {
@@ -76,7 +85,6 @@ function updateGuide() {
     }
   });
 
-  // Bytt tekst i boblen
   if (stickyBubble && stickyBubble.textContent !== currentText) {
     stickyBubble.style.opacity = "0";
     stickyBubble.style.transform = "translateY(8px)";
@@ -88,7 +96,6 @@ function updateGuide() {
     }, 150);
   }
 
-  // Marker aktiv seksjon i menyen
   if (currentSection) {
     setActiveMenu(currentSection);
   } else {
@@ -118,20 +125,17 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
    LUKK / ÅPNE GUIDE
 ========================= */
 
-// Husk hvis bruker tidligere har lukket guiden
 if (localStorage.getItem("guideClosed") === "true") {
   if (stickyGuide) stickyGuide.style.display = "none";
   guideOpen?.classList.add("visible");
 }
 
-// Lukk guide
 guideClose?.addEventListener("click", () => {
   if (stickyGuide) stickyGuide.style.display = "none";
   guideOpen?.classList.add("visible");
   localStorage.setItem("guideClosed", "true");
 });
 
-// Åpne guide igjen
 guideOpen?.addEventListener("click", () => {
   if (stickyGuide) stickyGuide.style.display = "flex";
   guideOpen?.classList.remove("visible");
@@ -139,35 +143,6 @@ guideOpen?.addEventListener("click", () => {
   updateGuide();
 });
 
-/* =========================
-   EVENTS
-========================= */
-
-window.addEventListener("scroll", updateGuide);
-window.addEventListener("load", updateGuide);
-window.addEventListener("resize", updateGuide);
-/* =========================
-   SCROLL REVEAL
-========================= */
-
-const revealItems = document.querySelectorAll(".reveal");
-
-const revealObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-      }
-    });
-  },
-  {
-    threshold: 0.15
-  }
-);
-
-revealItems.forEach((item) => {
-  revealObserver.observe(item);
-});
 /* =========================
    SECTION INSIGHTS
 ========================= */
@@ -180,12 +155,6 @@ const insightSections = [
   { id: "faq", event: "Section FAQ" },
   { id: "kontakt", event: "Section Kontakt" }
 ];
-
-function trackCloudflareEvent(name) {
-  if (window.cloudflare && window.cloudflare.insights) {
-    window.cloudflare.insights.track(name);
-  }
-}
 
 const sectionObserver = new IntersectionObserver(
   (entries) => {
@@ -212,6 +181,7 @@ insightSections.forEach((section) => {
   const el = document.getElementById(section.id);
   if (el) sectionObserver.observe(el);
 });
+
 /* =========================
    FAQ INSIGHTS
 ========================= */
@@ -229,3 +199,34 @@ faqItems.forEach((item) => {
     trackCloudflareEvent(`FAQ: ${question}`);
   });
 });
+
+/* =========================
+   SCROLL REVEAL
+========================= */
+
+const revealItems = document.querySelectorAll(".reveal");
+
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  },
+  {
+    threshold: 0.15
+  }
+);
+
+revealItems.forEach((item) => {
+  revealObserver.observe(item);
+});
+
+/* =========================
+   EVENTS
+========================= */
+
+window.addEventListener("scroll", updateGuide);
+window.addEventListener("load", updateGuide);
+window.addEventListener("resize", updateGuide);
