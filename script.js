@@ -239,7 +239,7 @@ faqItems.forEach((item) => {
 });
 
 /* =========================
-   CHATBOT
+   CHATBOT (RYDDET OG FORBEDRET)
 ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -254,165 +254,144 @@ document.addEventListener("DOMContentLoaded", () => {
     ? window.chatbotKnowledgeBase
     : [];
 
-  function normalizeText(text) {
+  /* 🔹 NORMALIZE */
+  function normalize(text) {
     return text
       .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^\w\sæøå]/g, " ")
-      .replace(/\s+/g, " ")
+      .replace(/[^\w\sæøå]/gi, "")
       .trim();
   }
 
-  function scoreQuestion(question, item) {
-    const normalizedQuestion = normalizeText(question);
+  /* 🔹 SCORE */
+  function scoreEntry(input, entry) {
+    const text = normalize(input);
     let score = 0;
 
-    item.keywords.forEach((keyword) => {
-      const normalizedKeyword = normalizeText(keyword);
-
-      if (normalizedQuestion.includes(normalizedKeyword)) {
-        score += normalizedKeyword.includes(" ") ? 3 : 1;
-      }
+    entry.keywords.forEach((word) => {
+      if (text.includes(word)) score += 3;
     });
+
+    if (entry.synonyms) {
+      entry.synonyms.forEach((word) => {
+        if (text.includes(word)) score += 2;
+      });
+    }
 
     return score;
   }
 
-  function findBestMatches(question) {
-    return knowledgeBase
-      .map((item) => ({
-        ...item,
-        score: scoreQuestion(question, item)
-      }))
-      .filter((item) => item.score > 0)
-      .sort((a, b) => b.score - a.score);
-  }
+  /* 🔹 FIND BEST MATCH */
+  function findBestMatch(input) {
+    let bestMatch = null;
+    let bestScore = 0;
 
-  function cleanFollowUps(followUps = [], currentQuestion = "") {
-    const seen = new Set();
-    const normalizedCurrent = normalizeText(currentQuestion);
+    knowledgeBase.forEach((entry) => {
+      const score = scoreEntry(input, entry);
 
-    return followUps.filter((question) => {
-      const normalized = normalizeText(question);
-
-      if (!normalized) return false;
-      if (normalized === normalizedCurrent) return false;
-      if (seen.has(normalized)) return false;
-
-      seen.add(normalized);
-      return true;
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = entry;
+      }
     });
+
+    return bestScore > 0 ? bestMatch : null;
   }
 
-  function createFollowUpButtons(followUps, currentQuestion) {
-    const cleanedFollowUps = cleanFollowUps(followUps, currentQuestion);
+  /* 🔹 FORMAT SVAR */
+  function formatAnswer(text) {
+    return text
+      .replace(/\n\n/g, "<br><br>")
+      .replace(/\n• /g, "<br>• ");
+  }
 
-    if (!cleanedFollowUps.length) return null;
+  /* 🔹 FOLLOWUPS */
+  function createFollowUps(followUps = []) {
+    if (!followUps.length) return null;
 
     const wrapper = document.createElement("div");
     wrapper.className = "chatbot-suggestions";
 
-    cleanedFollowUps.forEach((question) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "chat-suggestion";
-      button.textContent = question;
+    followUps.forEach((q) => {
+      const btn = document.createElement("button");
+      btn.className = "chat-suggestion";
+      btn.textContent = q;
 
-      button.addEventListener("click", () => {
-        trackCloudflareEvent(`Chatbot Oppfølging: ${question}`);
-        handleQuestion(question, "followup");
-      });
+      btn.onclick = () => {
+        trackCloudflareEvent(`Chatbot Oppfølging: ${q}`);
+        handleQuestion(q);
+      };
 
-      wrapper.appendChild(button);
+      wrapper.appendChild(btn);
     });
 
     return wrapper;
   }
 
-  function addMessage(text, sender, followUps = [], currentQuestion = "") {
-    const message = document.createElement("div");
-    message.className = `chatbot-message ${sender}`;
+  /* 🔹 MESSAGE */
+  function addMessage(text, sender, followUps = []) {
+    const msg = document.createElement("div");
+    msg.className = `chatbot-message ${sender}`;
 
-    const textNode = document.createElement("div");
-    textNode.textContent = text;
-    message.appendChild(textNode);
+    const content = document.createElement("div");
 
     if (sender === "bot") {
-      const followUpButtons = createFollowUpButtons(followUps, currentQuestion);
-      if (followUpButtons) {
-        message.appendChild(followUpButtons);
-      }
+      content.innerHTML = formatAnswer(text);
+    } else {
+      content.textContent = text;
     }
 
-    chatMessages.appendChild(message);
+    msg.appendChild(content);
+
+    if (sender === "bot") {
+      const fu = createFollowUps(followUps);
+      if (fu) msg.appendChild(fu);
+    }
+
+    chatMessages.appendChild(msg);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
-  function getBotReply(question) {
-    if (!knowledgeBase.length) {
-      return {
-        text: "Chatboten mangler kunnskapsgrunnlag akkurat nå. Sjekk at chatbot-data.js er lastet inn før script.js.",
-        followUps: []
-      };
-    }
-
-    const matches = findBestMatches(question);
-    const best = matches[0];
-    const second = matches[1];
-
-    if (!best) {
-      return {
-        text: "Det har jeg ikke nok informasjon om ennå. Prøv gjerne å spørre om erfaring, LiBiR, resultater, lederstil, teknologi, CV eller kontakt.",
-        followUps: [
-          "Hva slags erfaring har Johan?",
-          "Hva er de viktigste resultatene hans?",
-          "Hvordan er Johan som leder?"
-        ]
-      };
-    }
-
-    if (second && second.score >= 3 && second.id !== best.id) {
-      return {
-        text: `${best.answer} ${second.answer}`,
-        followUps: best.followUps || [],
-        topic: best.title || ""
-      };
-    }
-
+  /* 🔹 FALLBACK */
+  function fallback() {
     return {
-      text: best.answer,
-      followUps: best.followUps || [],
-      topic: best.title || ""
+      answer:
+        "Godt spørsmål – det burde jeg egentlig kunne svare på.\n\nPrøv gjerne å spørre om erfaring, lederstil eller hva Johan kan bidra med.",
+      followUps: [
+        "Hva slags erfaring har Johan?",
+        "Hvordan er han som leder?",
+        "Hva kan han bidra med?"
+      ]
     };
   }
 
-  function handleQuestion(question, source = "typed") {
-    const cleanQuestion = question.trim();
-    if (!cleanQuestion) return;
+  /* 🔹 HANDLE QUESTION */
+  function handleQuestion(question) {
+    const q = question.trim();
+    if (!q) return;
 
-    addMessage(cleanQuestion, "user");
-    trackCloudflareEvent(`Chatbot Spørsmål: ${source}`);
+    addMessage(q, "user");
+    trackCloudflareEvent(`Chatbot Spørsmål`);
 
-    const reply = getBotReply(cleanQuestion);
+    const match = findBestMatch(q);
+    const response = match ? match : fallback();
 
     setTimeout(() => {
-      addMessage(reply.text, "bot", reply.followUps, cleanQuestion);
-    }, 220);
+      addMessage(response.answer, "bot", response.followUps);
+    }, 200);
   }
 
+  /* 🔹 FORM */
   chatForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    handleQuestion(chatInput.value, "typed");
+    handleQuestion(chatInput.value);
     chatInput.value = "";
-    chatInput.focus();
   });
 
-  suggestionButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const question = button.dataset.question || button.textContent || "";
-      trackCloudflareEvent(`Chatbot Forslag: ${question}`);
-      handleQuestion(question, "suggestion");
+  /* 🔹 SUGGESTIONS */
+  suggestionButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const q = btn.dataset.question || btn.textContent;
+      handleQuestion(q);
     });
   });
 });
