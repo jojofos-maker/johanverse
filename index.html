@@ -67,7 +67,7 @@
           <a
             class="btn btn-primary"
             href="#historien"
-            onclick="trackEvent('Hero Start historien')"
+            onclick="trackCloudflareEvent('Hero Start historien')"
           >
             Start historien
           </a>
@@ -75,7 +75,7 @@
           <a
             class="btn btn-secondary"
             href="#kontakt"
-            onclick="trackEvent('Hero Ta kontakt')"
+            onclick="trackCloudflareEvent('Hero Ta kontakt')"
           >
             Ta kontakt
           </a>
@@ -379,7 +379,7 @@
           <a
             class="btn btn-primary btn-icon"
             href="mailto:jojofos@gmail.com"
-            onclick="trackEvent('Kontakt E-post')"
+            onclick="trackCloudflareEvent('Kontakt E-post')"
           >
             <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
               <path d="M4 6h16v12H4z" stroke="currentColor" fill="none" stroke-width="2"></path>
@@ -393,7 +393,7 @@
             href="https://wa.me/4748881540"
             target="_blank"
             rel="noopener noreferrer"
-            onclick="trackEvent('Kontakt WhatsApp')"
+            onclick="trackCloudflareEvent('Kontakt WhatsApp')"
           >
             <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
               <path
@@ -408,7 +408,7 @@
             class="btn btn-primary btn-icon"
             href="fossli_cv_kort.pdf"
             target="_blank"
-            onclick="trackEvent('Kontakt Kort CV')"
+            onclick="trackCloudflareEvent('CV Kort Nedlasting')"
           >
             <span>📄 Kort CV</span>
           </a>
@@ -417,7 +417,7 @@
             class="btn btn-secondary btn-icon"
             href="fossli_cv_full.pdf"
             target="_blank"
-            onclick="trackEvent('Kontakt Full CV')"
+            onclick="trackCloudflareEvent('CV Full Nedlasting')"
           >
             <span>📄 Full CV</span>
           </a>
@@ -427,7 +427,7 @@
             href="https://www.linkedin.com/in/jojofos/"
             target="_blank"
             rel="noopener noreferrer"
-            onclick="trackEvent('Kontakt LinkedIn')"
+            onclick="trackCloudflareEvent('Kontakt LinkedIn')"
           >
             <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
               <path
@@ -456,14 +456,6 @@
   <button id="guideOpen" class="guide-open">
     Snakk med Johan
   </button>
-
-  <script>
-    function trackEvent(name) {
-      if (window.cloudflare && window.cloudflare.insights) {
-        window.cloudflare.insights.track(name);
-      }
-    }
-  </script>
 
   <script src="script.js"></script>
 </body>
