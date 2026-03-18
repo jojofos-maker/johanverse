@@ -23,6 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const stickyGuide = document.getElementById("stickyGuide");
   const guideClose = document.getElementById("guideClose");
   const guideOpen = document.getElementById("guideOpen");
+   const chatbotSection = document.getElementById("chatbot");
+const chatbotInput = document.getElementById("chatbotInput");
 
   if (guideClose && stickyGuide) {
     guideClose.addEventListener("click", () => {
@@ -96,7 +98,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     sections.forEach(sec => observer.observe(sec));
   }
+function openChatbotFromGuide() {
+  if (chatbotSection) {
+    chatbotSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
 
+  setTimeout(() => {
+    if (chatbotInput) {
+      chatbotInput.focus();
+    }
+  }, 500);
+
+  trackCloudflareEvent("sticky_guide_to_chatbot");
+}
   /* =========================
      FAQ TRACKING
   ========================== */
