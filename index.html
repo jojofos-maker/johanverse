@@ -1,426 +1,365 @@
-/* =========================
-   ELEMENTER
-========================= */
-
-const stickyGuide = document.getElementById("stickyGuide");
-const stickyBubble = document.getElementById("stickyGuideBubble");
-const guideClose = document.getElementById("guideClose");
-const guideOpen = document.getElementById("guideOpen");
-const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
-
-const chatbotMessages = document.getElementById("chatbotMessages");
-const chatbotForm = document.getElementById("chatbotForm");
-const chatbotInput = document.getElementById("chatbotInput");
-const chatbotFollowUps = document.getElementById("chatbotFollowUps");
-
-/* =========================
-   TRACKING
-========================= */
-
-function trackCloudflareEvent(name) {
-  if (window.cloudflare && window.cloudflare.insights) {
-    window.cloudflare.insights.track(name);
-  }
-}
-
-window.trackCloudflareEvent = trackCloudflareEvent;
-
-/* =========================
-   STICKY GUIDE
-========================= */
-
-if (guideClose && stickyGuide && stickyBubble) {
-  guideClose.addEventListener("click", () => {
-    stickyGuide.classList.add("is-hidden");
-    stickyBubble.classList.add("is-visible");
-  });
-}
-
-if (guideOpen && stickyGuide && stickyBubble) {
-  guideOpen.addEventListener("click", () => {
-    stickyGuide.classList.remove("is-hidden");
-    stickyBubble.classList.remove("is-visible");
-  });
-}
-
-/* =========================
-   MENYTRACKING
-========================= */
-
-menuLinks.forEach((link) => {
-  link.addEventListener("click", () => {
-    const href = link.getAttribute("href");
-    if (href) {
-      trackCloudflareEvent(`menu_click_${href.replace("#", "")}`);
-    }
-  });
-});
-
-/* =========================
-   REVEAL
-========================= */
-
-const revealElements = document.querySelectorAll(".reveal");
-
-if (revealElements.length) {
-  const revealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-        }
-      });
-    },
-    {
-      threshold: 0.15
-    }
-  );
-
-  revealElements.forEach((element) => {
-    revealObserver.observe(element);
-  });
-}
-
-/* =========================
-   CHATBOT DATA
-========================= */
-
-const chatbotKnowledge = Array.isArray(window.chatbotKnowledgeBase)
-  ? window.chatbotKnowledgeBase
-  : [];
-
-const chatbotState = {
-  lastMatchId: null,
-  lastSuggestions: [],
-  lastUserMessage: "",
-  turnCount: 0
-};
-
-const SMALL_TALK = {
-  greetings: ["hei", "hallo", "hey", "god dag", "heisann"],
-  thanks: ["takk", "tusen takk", "supert takk", "flott takk"],
-  shortFollowUps: [
-    "fortell mer",
-    "mer",
-    "utdyp",
-    "kan du utdype",
-    "hvordan da",
-    "hva mener du",
-    "si mer"
-  ]
-};
-
-/* =========================
-   HJELPEFUNKSJONER
-========================= */
-
-function normalizeText(text) {
-  return (text || "")
-    .toLowerCase()
-    .trim()
-    .replace(/[.,!?;:()]/g, "")
-    .replace(/\s+/g, " ");
-}
-
-function splitWords(text) {
-  return normalizeText(text)
-    .split(" ")
-    .filter(Boolean);
-}
-
-function addMessage(text, sender = "bot") {
-  if (!chatbotMessages) return;
-
-  const message = document.createElement("div");
-  message.className = `chatbot-message chatbot-message--${sender}`;
-  message.textContent = text;
-
-  chatbotMessages.appendChild(message);
-  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-}
-
-function clearFollowUps() {
-  if (!chatbotFollowUps) return;
-  chatbotFollowUps.innerHTML = "";
-}
-
-function renderFollowUps(followUps = []) {
-  if (!chatbotFollowUps) return;
-
-  clearFollowUps();
-
-  if (!followUps.length) return;
-
-  followUps.forEach((question) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "chatbot-followup";
-    button.textContent = question;
-
-    button.addEventListener("click", () => {
-      if (chatbotInput) {
-        chatbotInput.value = question;
-      }
-      handleChatbotMessage(question);
-    });
-
-    chatbotFollowUps.appendChild(button);
-  });
-}
-
-function getRandomItems(items = [], count = 3, exclude = []) {
-  const filtered = items.filter((item) => !exclude.includes(item));
-  const shuffled = [...filtered].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
-}
-
-function collectGeneralFollowUps(exclude = []) {
-  const allFollowUps = chatbotKnowledge.flatMap((item) =>
-    Array.isArray(item.followUps) ? item.followUps : []
-  );
-
-  const unique = [...new Set(allFollowUps)];
-  return getRandomItems(unique, 3, exclude);
-}
-
-function isGreeting(text) {
-  const normalized = normalizeText(text);
-  return SMALL_TALK.greetings.some((word) => normalized === word);
-}
-
-function isThanks(text) {
-  const normalized = normalizeText(text);
-  return SMALL_TALK.thanks.some((word) => normalized.includes(word));
-}
-
-function isShortFollowUp(text) {
-  const normalized = normalizeText(text);
-  return (
-    normalized.split(" ").length <= 4 &&
-    SMALL_TALK.shortFollowUps.some((phrase) => normalized.includes(phrase))
-  );
-}
-
-function isVeryShortMessage(text) {
-  return splitWords(text).length <= 3;
-}
-
-function scoreTopic(entry, userText) {
-  const normalizedInput = normalizeText(userText);
-  const words = splitWords(userText);
-
-  let score = 0;
-
-  const keywords = Array.isArray(entry.keywords) ? entry.keywords : [];
-  const synonyms = Array.isArray(entry.synonyms) ? entry.synonyms : [];
-  const phrases = [...keywords, ...synonyms].map(normalizeText);
-
-  phrases.forEach((phrase) => {
-    if (!phrase) return;
-
-    if (normalizedInput === phrase) {
-      score += 12;
-    } else if (normalizedInput.includes(phrase)) {
-      score += phrase.split(" ").length > 1 ? 8 : 4;
-    }
-
-    const phraseWords = phrase.split(" ");
-    const allWordsMatch = phraseWords.every((word) => words.includes(word));
-    if (allWordsMatch) {
-      score += phraseWords.length > 1 ? 6 : 2;
-    }
-  });
-
-  if (chatbotState.lastMatchId === entry.id) {
-    score += 1;
-  }
-
-  return score;
-}
-
-function findBestMatch(userText) {
-  let bestMatch = null;
-  let bestScore = 0;
-
-  chatbotKnowledge.forEach((entry) => {
-    const score = scoreTopic(entry, userText);
-    if (score > bestScore) {
-      bestScore = score;
-      bestMatch = entry;
-    }
-  });
-
-  if (bestScore < 3) {
-    return null;
-  }
-
-  return bestMatch;
-}
-
-function findById(id) {
-  return chatbotKnowledge.find((item) => item.id === id) || null;
-}
-
-function getContextAwareMatch(userText) {
-  const directMatch = findBestMatch(userText);
-  if (directMatch) return directMatch;
-
-  if (
-    chatbotState.lastMatchId &&
-    (isShortFollowUp(userText) || isVeryShortMessage(userText))
-  ) {
-    return findById(chatbotState.lastMatchId);
-  }
-
-  return null;
-}
-
-function buildAnswer(match, userText) {
-  if (chatbotState.lastMatchId === match.id && isShortFollowUp(userText)) {
-    return `${match.answer} ${
-      match.followUps && match.followUps.length
-        ? "Du kan også spørre videre om et av forslagene under."
-        : ""
-    }`;
-  }
-
-  return match.answer;
-}
-
-function buildFollowUps(match) {
-  const topicFollowUps = Array.isArray(match.followUps) ? match.followUps : [];
-  const freshTopicFollowUps = topicFollowUps.filter(
-    (item) => !chatbotState.lastSuggestions.includes(item)
-  );
-
-  let selected = freshTopicFollowUps.slice(0, 3);
-
-  if (selected.length < 3) {
-    const extra = collectGeneralFollowUps([
-      ...selected,
-      ...chatbotState.lastSuggestions
-    ]);
-    selected = [...selected, ...extra].slice(0, 3);
-  }
-
-  chatbotState.lastSuggestions = selected;
-  return selected;
-}
-
-function getFallbackResponse() {
-  const suggestions = collectGeneralFollowUps(chatbotState.lastSuggestions);
-
-  chatbotState.lastSuggestions = suggestions;
-
-  return {
-    answer:
-      "Jeg er ikke helt sikker på hva du mener ennå. Du kan gjerne spørre om erfaring, lederstil, resultater, CV eller hva Johan kan bidra med.",
-    followUps: suggestions
-  };
-}
-
-function handleSmallTalk(userText) {
-  if (isGreeting(userText)) {
-    const suggestions = collectGeneralFollowUps(chatbotState.lastSuggestions);
-    chatbotState.lastSuggestions = suggestions;
-
-    return {
-      answer:
-        "Hei! Du kan spørre meg om Johan Jørgen Fossli, erfaringen hans, lederstilen hans, resultatene hans eller hva han kan bidra med.",
-      followUps: suggestions
-    };
-  }
-
-  if (isThanks(userText)) {
-    const suggestions = collectGeneralFollowUps(chatbotState.lastSuggestions);
-    chatbotState.lastSuggestions = suggestions;
-
-    return {
-      answer: "Bare hyggelig. Hva vil du vite mer om?",
-      followUps: suggestions
-    };
-  }
-
-  return null;
-}
-
-function handleChatbotMessage(rawMessage) {
-  const userText = rawMessage.trim();
-  if (!userText) return;
-
-  addMessage(userText, "user");
-  clearFollowUps();
-
-  chatbotState.lastUserMessage = userText;
-  chatbotState.turnCount += 1;
-
-  trackCloudflareEvent("chatbot_question_sent");
-
-  const smallTalkResponse = handleSmallTalk(userText);
-  if (smallTalkResponse) {
-    addMessage(smallTalkResponse.answer, "bot");
-    renderFollowUps(smallTalkResponse.followUps);
-    return;
-  }
-
-  const match = getContextAwareMatch(userText);
-
-  if (match) {
-    chatbotState.lastMatchId = match.id;
-
-    const answer = buildAnswer(match, userText);
-    const followUps = buildFollowUps(match);
-
-    addMessage(answer, "bot");
-    renderFollowUps(followUps);
-
-    trackCloudflareEvent(`chatbot_match_${match.id}`);
-    return;
-  }
-
-  chatbotState.lastMatchId = null;
-
-  const fallback = getFallbackResponse();
-  addMessage(fallback.answer, "bot");
-  renderFollowUps(fallback.followUps);
-
-  trackCloudflareEvent("chatbot_fallback");
-}
-
-/* =========================
-   CHATBOT EVENTS
-========================= */
-
-if (chatbotForm && chatbotInput) {
-  chatbotForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const message = chatbotInput.value;
-    handleChatbotMessage(message);
-
-    chatbotInput.value = "";
-    chatbotInput.focus();
-  });
-}
-
-/* =========================
-   STATISKE FORSLAGSKNAPPER
-========================= */
-
-function bindInitialSuggestionButtons() {
-  const suggestionButtons = document.querySelectorAll(".chat-suggestion");
-
-  suggestionButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const text = button.dataset.question || button.textContent.trim();
-
-      if (chatbotInput) {
-        chatbotInput.value = text;
-      }
-
-      handleChatbotMessage(text);
-    });
-  });
-}
-
-bindInitialSuggestionButtons();
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JJ historien</title>
+  <meta name="description" content="Interaktiv kandidatprofil for Johan Jørgen Fossli" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css" />
+
+  <script
+    defer
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token": "31e43baba8a64c498aa9babb1de9ba12"}'
+  ></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a href="#top" class="brand">JJ historien</a>
+
+      <nav class="menu">
+        <a href="#historien">Historien</a>
+        <a href="#resultater">Resultater</a>
+        <a href="#faq">OSS</a>
+        <a href="#chatbot">Chatbot</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero container">
+      <div class="hero-copy">
+        <div class="eyebrow">Ydmyk leder med gjennomføringskraft</div>
+        <h1>Johan Jørgen Fossli</h1>
+
+        <p class="hero-role">
+          Leder • Forretningsutvikling • Sirkulærøkonomi • Teknologi
+        </p>
+
+        <p class="hero-intro">
+          Over 20 år i operative lederroller, med tyngde innen drift,
+          selskapsbygging, strategi og gjennomføring.
+        </p>
+
+        <div class="hero-actions">
+          <a
+            class="btn btn-primary"
+            href="#historien"
+            onclick="trackCloudflareEvent('Hero Start historien')"
+          >
+            Start historien
+          </a>
+
+          <a
+            class="btn btn-secondary"
+            href="#kontakt"
+            onclick="trackCloudflareEvent('Hero Ta kontakt')"
+          >
+            Ta kontakt
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img src="maskot.jpeg" alt="Tegneseriefigur av Johan" />
+        <div class="speech" id="speechBubble">
+          Hei! 👋 Scroll ned så skal jeg fortelle historien min.
+        </div>
+      </div>
+    </section>
+
+    <section id="historien" class="section section-story">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Min reise</div>
+          <h2>Dannelsen</h2>
+          <p>Et kort overblikk over reisen min.</p>
+        </div>
+
+        <div class="journey-list">
+          <article class="journey-item reveal">
+            <div class="journey-image">
+              <img src="Oppvekst.png" alt="Oppvekst i Lillesand" />
+            </div>
+            <div class="journey-copy">
+              <div class="journey-kicker">Kapittel 1</div>
+              <h3>Oppvekst i Lillesand</h3>
+              <p>
+                Født og oppvokst i Sørlandets "perle" Lillesand. Her ble mye av
+                grunnlaget lagt: nysgjerrighet, arbeidsvilje og gleden av å få
+                ting til sammen med andre.
+              </p>
+            </div>
+          </article>
+
+          <article class="journey-item reverse reveal">
+            <div class="journey-image">
+              <img src="lufting.png" alt="Lufting i Bodø, Porsgrunn og Oslo" />
+            </div>
+            <div class="journey-copy">
+              <div class="journey-kicker">Kapittel 2</div>
+              <h3>Utforskerfasen</h3>
+              <p>
+                Bodø, Porsgrunn og Oslo ga nye perspektiver. Erfaringene utenfor
+                Sørlandet gjorde meg tryggere, mer nysgjerrig og mer bevisst på
+                hva slags leder jeg ønsket å bli.
+              </p>
+            </div>
+          </article>
+
+          <article class="journey-item reveal">
+            <div class="journey-image">
+              <img src="De første jobbene.png" alt="De første jobbene" />
+            </div>
+            <div class="journey-copy">
+              <div class="journey-kicker">Kapittel 3</div>
+              <h3>De første jobbene</h3>
+              <p>
+                Erfaring fra salg, bemanning og kundearbeid hos blant annet
+                Adecco, Würth og Destinasjon Sørlandet.
+              </p>
+            </div>
+          </article>
+
+          <article class="journey-item reverse reveal">
+            <div class="journey-image">
+              <img src="DL LiBiR.png" alt="Daglig leder i LiBiR" />
+            </div>
+            <div class="journey-copy">
+              <div class="journey-kicker">Kapittel 4</div>
+              <h3>16 år som daglig leder</h3>
+              <p>
+                I LiBiR fikk jeg ansvar for strategi, drift, økonomi og
+                organisasjon.
+              </p>
+            </div>
+          </article>
+
+          <article class="journey-item reveal">
+            <div class="journey-image">
+              <img src="LiBiR entre.png" alt="Entreprenørskap og utvikling" />
+            </div>
+            <div class="journey-copy">
+              <div class="journey-kicker">Kapittel 5</div>
+              <h3>Entreprenørskap og utvikling</h3>
+              <p>
+                Jeg tok initiativ til nye selskaper og nye satsinger.
+              </p>
+            </div>
+          </article>
+
+          <article class="journey-item reverse reveal">
+            <div class="journey-image">
+              <img src="Biokull AM.png" alt="Innovasjon og biokull" />
+            </div>
+            <div class="journey-copy">
+              <div class="journey-kicker">Kapittel 6</div>
+              <h3>Innovasjon og nye muligheter</h3>
+              <p>
+                I Agder Miljø jobbet vi med biokull og nye miljøløsninger.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <article class="quote-card reveal">
+          <p>
+            “En god leder står bakerst med oversikt — men det viktigste er å gi
+            målgivende pasninger.”
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="resultater" class="section section-results">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Utvalgte resultater</div>
+          <h2>Gjennomføringsevne</h2>
+        </div>
+
+        <div class="results-grid">
+          <article class="result-card">
+            <div class="result-card-image">
+              <img src="libir-daglig-leder.png" alt="Illustrasjon fra LiBiR" />
+            </div>
+            <p class="result-number">16 år</p>
+            <h3>LiBiR</h3>
+            <p>Daglig leder med helhetlig ansvar.</p>
+          </article>
+
+          <article class="result-card">
+            <div class="result-card-image">
+              <img src="gaselle-lindum-sor-2019.jpg" alt="Gaselle" />
+            </div>
+            <p class="result-number">2× Gaselle</p>
+            <h3>Miljøpartner Sør og Lindum Sør</h3>
+            <p>Bygget opp selskap, skapte vekst og ledet til salg og fusjon.</p>
+          </article>
+
+          <article class="result-card">
+            <div class="result-card-image">
+              <img src="vekst_50.png" alt="50 prosent vekst" />
+            </div>
+            <p class="result-number">+50 %</p>
+            <h3>Agder Miljø</h3>
+            <p>Økte omsetningen 50 % på ett år.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section section-faq">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Intervju Johan</div>
+          <h2>Spørsmål jeg ofte får</h2>
+        </div>
+
+        <div class="faq-list">
+          <details>
+            <summary>Hva slags leder er du?</summary>
+            <p>En operativ leder som liker å være tett på organisasjonen.</p>
+          </details>
+
+          <details>
+            <summary>Hvordan håndterer du kriser?</summary>
+            <p>Med ro, struktur og tydelig kommunikasjon.</p>
+          </details>
+
+          <details>
+            <summary>Hva gjør du første 90 dager i en ny rolle?</summary>
+            <p>Lytter, analyserer, bygger relasjoner og etablerer retning.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section id="chatbot" class="section chatbot-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Spør chatboten</div>
+          <h2>Spør om Johan</h2>
+          <p>
+            En enkel guide som svarer på spørsmål om bakgrunn, erfaring,
+            resultater og CV.
+          </p>
+        </div>
+
+        <div class="chatbot-card">
+          <div class="chatbot-header">
+            <div>
+              <strong>Johan-assistent</strong>
+              <p>Svarer ut fra innholdet på nettsiden og CV-en.</p>
+            </div>
+          </div>
+
+          <div id="chatbotMessages" class="chatbot-messages">
+            <div class="chatbot-message chatbot-message--bot">
+              Hei! Jeg svarer på spørsmål om Johan, erfaringen hans, resultater, lederstil og CV. Du kan for eksempel spørre:
+              <div class="chatbot-suggestions">
+                <button type="button" class="chat-suggestion" data-question="Hvem er Johan Jørgen Fossli?">Hvem er Johan?</button>
+                <button type="button" class="chat-suggestion" data-question="Hva slags erfaring har Johan?">Erfaring</button>
+                <button type="button" class="chat-suggestion" data-question="Hva har Johan gjort i LiBiR?">LiBiR</button>
+                <button type="button" class="chat-suggestion" data-question="Hva er de viktigste resultatene hans?">Resultater</button>
+                <button type="button" class="chat-suggestion" data-question="Hvordan er Johan som leder?">Lederstil</button>
+                <button type="button" class="chat-suggestion" data-question="Hvor finner jeg CV-en?">CV</button>
+              </div>
+            </div>
+          </div>
+
+          <form id="chatbotForm" class="chatbot-input-row">
+            <input
+              id="chatbotInput"
+              type="text"
+              placeholder="Skriv et spørsmål om Johan..."
+              autocomplete="off"
+            />
+            <button type="submit">Send</button>
+          </form>
+
+          <div id="chatbotFollowUps" class="chatbot-followups"></div>
+
+          <div class="chatbot-links">
+            <a
+              href="fossli_cv_kort.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onclick="trackCloudflareEvent('Chatbot Kort CV')"
+            >
+              Åpne kort CV
+            </a>
+            <a
+              href="fossli_cv_full.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onclick="trackCloudflareEvent('Chatbot Full CV')"
+            >
+              Åpne full CV
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="kontakt" class="section section-contact">
+      <div class="container contact-box">
+        <div>
+          <div class="eyebrow">Kontakt</div>
+          <h2>La oss ta en prat</h2>
+          <p>
+            Vil du vite mer, ta en prat eller invitere til intervju, hører jeg
+            gjerne fra deg.
+          </p>
+          <p>
+            Telefon:
+            <a href="tel:+4748881540"><strong>+47 488 81 540</strong></a>
+          </p>
+        </div>
+
+        <div class="contact-actions">
+          <a class="btn btn-primary btn-icon" href="mailto:jojofos@gmail.com">
+            <span>Send e-post</span>
+          </a>
+          <a class="btn btn-secondary btn-icon" href="fossli_cv_kort.pdf" target="_blank" rel="noopener noreferrer">
+            <span>📄 Kort CV</span>
+          </a>
+          <a class="btn btn-secondary btn-icon" href="fossli_cv_full.pdf" target="_blank" rel="noopener noreferrer">
+            <span>📄 Full CV</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="sticky-guide" id="stickyGuide">
+    <button class="guide-close" id="guideClose">×</button>
+    <img src="maskot.jpeg" alt="Johan guide" class="sticky-guide-img" />
+    <div class="sticky-guide-bubble" id="stickyGuideBubble">
+      Hei! Jeg følger deg nedover siden.
+    </div>
+  </div>
+
+  <button id="guideOpen" class="guide-open">
+    Snakk med Johan
+  </button>
+
+  <script src="chatbot-data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
