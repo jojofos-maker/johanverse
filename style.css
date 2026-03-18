@@ -257,10 +257,7 @@ a {
 .btn-secondary:hover {
   background: var(--green-dark);
 }
-.btn-secondary:hover {
-  background: #25D366;
-  color: white;
-}
+
 /* =========================
    8. HISTORIE / SEKSJONER
 ========================= */
@@ -666,7 +663,41 @@ a {
 }
 
 /* =========================
-   16. ANIMASJONER
+   16. BUTTON ICONS
+========================= */
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-icon svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* =========================
+   17. SCROLL REVEAL
+========================= */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+  will-change: opacity, transform;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================
+   18. ANIMASJONER
 ========================= */
 
 @keyframes floatMaskot {
@@ -681,7 +712,7 @@ a {
 }
 
 /* =========================
-   17. RESPONSIVE
+   19. RESPONSIVE
 ========================= */
 
 @media (max-width: 960px) {
@@ -780,52 +811,4 @@ a {
   .contact-actions {
     width: 100%;
   }
-}
-/* =========================
-   BUTTON ICONS
-========================= */
-
-.btn-icon {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-icon svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-/* =========================
-   BUTTON ICONS
-========================= */
-
-.btn-icon {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-icon svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-/* =========================
-   SCROLL REVEAL
-========================= */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
-  will-change: opacity, transform;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
