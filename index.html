@@ -36,6 +36,7 @@
         <a href="#historien">Historien</a>
         <a href="#resultater">Resultater</a>
         <a href="#faq">OSS</a>
+        <a href="#chatbot">Chatbot</a>
         <a href="#kontakt">Kontakt</a>
       </nav>
     </div>
@@ -228,35 +229,45 @@
           <div class="eyebrow">Utvalgte resultater</div>
           <h2>Gjennomføringsevne</h2>
         </div>
-<div class="results-grid">
-  <article class="result-card">
-    <div class="result-card-image">
-      <img src="libir-daglig-leder.png" alt="Illustrasjon fra LiBiR" />
-    </div>
-    <p class="result-number">16 år</p>
-    <h3>LiBiR</h3>
-    <p>Daglig leder med helhetlig ansvar for strategi, drift, økonomi og organisasjon.</p>
-  </article>
 
-  <article class="result-card">
-    <div class="result-card-image">
-      <img src="gaselle-lindum-sor-2019.jpg" alt="Gaselle-utmerkelse for Lindum Sør i 2019" />
-    </div>
-    <p class="result-number">2× Gaselle</p>
-    <h3>Miljøpartner Sør og Lindum Sør</h3>
-    <p>Bygget opp selskap, skapte vekst og ledet frem til salg og fusjon.</p>
-  </article>
+        <div class="results-grid">
+          <article class="result-card">
+            <div class="result-card-image">
+              <img src="libir-daglig-leder.png" alt="Illustrasjon fra LiBiR" />
+            </div>
+            <p class="result-number">16 år</p>
+            <h3>LiBiR</h3>
+            <p>
+              Daglig leder med helhetlig ansvar for strategi, drift, økonomi og
+              organisasjon.
+            </p>
+          </article>
 
-  <article class="result-card">
-    <div class="result-card-image">
-      <img src="vekst_50.png" alt="Illustrasjon av 50 prosent vekst" />
-    </div>
-    <p class="result-number">+50 %</p>
-    <h3>Agder Miljø</h3>
-    <p>Økte omsetningen 50 % på ett år i en krevende oppbyggingsfase.</p>
-  </article>
-</div>
-      
+          <article class="result-card">
+            <div class="result-card-image">
+              <img
+                src="gaselle-lindum-sor-2019.jpg"
+                alt="Gaselle-utmerkelse for Lindum Sør i 2019"
+              />
+            </div>
+            <p class="result-number">2× Gaselle</p>
+            <h3>Miljøpartner Sør og Lindum Sør</h3>
+            <p>
+              Bygget opp selskap, skapte vekst og ledet frem til salg og fusjon.
+            </p>
+          </article>
+
+          <article class="result-card">
+            <div class="result-card-image">
+              <img src="vekst_50.png" alt="Illustrasjon av 50 prosent vekst" />
+            </div>
+            <p class="result-number">+50 %</p>
+            <h3>Agder Miljø</h3>
+            <p>
+              Økte omsetningen 50 % på ett år i en krevende oppbyggingsfase.
+            </p>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -360,50 +371,111 @@
         </div>
       </div>
     </section>
-<section id="chatbot" class="chatbot-section">
-  <div class="container">
-    <div class="section-intro">
-      <p class="eyebrow">Spør chatboten</p>
-      <h2>Spør om Johan</h2>
-      <p>
-        En enkel guide som svarer på spørsmål om bakgrunn, erfaring, resultater og CV.
-      </p>
-    </div>
 
-    <div class="chatbot-card">
-      <div class="chatbot-header">
-        <div>
-          <strong>Johan-assistent</strong>
-          <p>Svarer ut fra innholdet på nettsiden og CV-en.</p>
+    <!-- =========================
+         CHATBOT
+    ========================== -->
+    <section id="chatbot" class="section chatbot-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Spør chatboten</div>
+          <h2>Spør om Johan</h2>
+          <p>
+            En enkel guide som svarer på spørsmål om bakgrunn, erfaring,
+            resultater og CV.
+          </p>
         </div>
-      </div>
 
-      <div id="chatMessages" class="chatbot-messages">
-        <div class="chatbot-message bot">
-          Hei! Du kan spørre meg om for eksempel:
-          <div class="chatbot-suggestions">
-            <button class="chat-suggestion" data-question="Hvem er Johan Jørgen Fossli?">Hvem er Johan?</button>
-            <button class="chat-suggestion" data-question="Hva slags erfaring har Johan?">Erfaring</button>
-            <button class="chat-suggestion" data-question="Hva har Johan gjort i LiBiR?">LiBiR</button>
-            <button class="chat-suggestion" data-question="Hva er de viktigste resultatene hans?">Resultater</button>
-            <button class="chat-suggestion" data-question="Hvordan er Johan som leder?">Lederstil</button>
-            <button class="chat-suggestion" data-question="Hvor finner jeg CV-en?">CV</button>
+        <div class="chatbot-card">
+          <div class="chatbot-header">
+            <div>
+              <strong>Johan-assistent</strong>
+              <p>Svarer ut fra innholdet på nettsiden og CV-en.</p>
+            </div>
+          </div>
+
+          <div id="chatMessages" class="chatbot-messages">
+            <div class="chatbot-message bot">
+              Hei! Du kan spørre meg om for eksempel:
+              <div class="chatbot-suggestions">
+                <button
+                  type="button"
+                  class="chat-suggestion"
+                  data-question="Hvem er Johan Jørgen Fossli?"
+                >
+                  Hvem er Johan?
+                </button>
+                <button
+                  type="button"
+                  class="chat-suggestion"
+                  data-question="Hva slags erfaring har Johan?"
+                >
+                  Erfaring
+                </button>
+                <button
+                  type="button"
+                  class="chat-suggestion"
+                  data-question="Hva har Johan gjort i LiBiR?"
+                >
+                  LiBiR
+                </button>
+                <button
+                  type="button"
+                  class="chat-suggestion"
+                  data-question="Hva er de viktigste resultatene hans?"
+                >
+                  Resultater
+                </button>
+                <button
+                  type="button"
+                  class="chat-suggestion"
+                  data-question="Hvordan er Johan som leder?"
+                >
+                  Lederstil
+                </button>
+                <button
+                  type="button"
+                  class="chat-suggestion"
+                  data-question="Hvor finner jeg CV-en?"
+                >
+                  CV
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <form id="chatForm" class="chatbot-input-row">
+            <input
+              id="chatInput"
+              type="text"
+              placeholder="Skriv et spørsmål om Johan..."
+              autocomplete="off"
+            />
+            <button type="submit">Send</button>
+          </form>
+
+          <div class="chatbot-links">
+            <a
+              href="fossli_cv_kort.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onclick="trackCloudflareEvent('Chatbot Kort CV')"
+            >
+              Åpne kort CV
+            </a>
+            <a
+              href="fossli_cv_full.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onclick="trackCloudflareEvent('Chatbot Full CV')"
+            >
+              Åpne full CV
+            </a>
           </div>
         </div>
       </div>
+    </section>
 
-      <form id="chatForm" class="chatbot-input-row">
-        <input
-          id="chatInput"
-          type="text"
-          placeholder="Skriv et spørsmål om Johan..."
-          autocomplete="off"
-        />
-        <button type="submit">Send</button>
-      </form>
-    </div>
-  </div>
-</section>
     <!-- =========================
          KONTAKT
     ========================== -->
@@ -429,8 +501,18 @@
             onclick="trackCloudflareEvent('Kontakt E-post')"
           >
             <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
-              <path d="M4 6h16v12H4z" stroke="currentColor" fill="none" stroke-width="2"></path>
-              <path d="M4 7l8 6 8-6" stroke="currentColor" fill="none" stroke-width="2"></path>
+              <path
+                d="M4 6h16v12H4z"
+                stroke="currentColor"
+                fill="none"
+                stroke-width="2"
+              ></path>
+              <path
+                d="M4 7l8 6 8-6"
+                stroke="currentColor"
+                fill="none"
+                stroke-width="2"
+              ></path>
             </svg>
             <span>Send e-post</span>
           </a>
@@ -455,6 +537,7 @@
             class="btn btn-primary btn-icon"
             href="fossli_cv_kort.pdf"
             target="_blank"
+            rel="noopener noreferrer"
             onclick="trackCloudflareEvent('CV Kort Nedlasting')"
           >
             <span>📄 Kort CV</span>
@@ -464,6 +547,7 @@
             class="btn btn-secondary btn-icon"
             href="fossli_cv_full.pdf"
             target="_blank"
+            rel="noopener noreferrer"
             onclick="trackCloudflareEvent('CV Full Nedlasting')"
           >
             <span>📄 Full CV</span>
