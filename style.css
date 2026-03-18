@@ -677,46 +677,60 @@ a {
   box-shadow: 0 0 0 3px rgba(78, 139, 111, 0.12);
 }
 
-.chatbot-input-row button,
-.chat-suggestion {
-  cursor: pointer;
+.chatbot-input-row button {
+  border: none;
+  padding: 0 18px;
   border-radius: 12px;
+  background: var(--ink);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
   transition:
     transform 0.18s ease,
     background 0.18s ease,
     border-color 0.18s ease;
 }
 
-.chatbot-input-row button {
-  border: none;
-  padding: 0 18px;
-  background: var(--ink);
-  color: white;
-  font-weight: 700;
-}
-
 .chatbot-input-row button:hover {
   transform: translateY(-1px);
 }
 
-.chatbot-suggestions {
+.chatbot-suggestions,
+.chatbot-followups {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.chatbot-suggestions {
   margin-top: 14px;
 }
 
-.chat-suggestion {
+.chatbot-followups {
+  padding: 0 16px 16px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.chat-suggestion,
+.chatbot-followup {
   padding: 8px 12px;
   background: white;
   border: 1px solid var(--line);
+  border-radius: 12px;
   font-size: 0.92rem;
   color: var(--ink);
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
 }
 
-.chat-suggestion:hover {
+.chat-suggestion:hover,
+.chatbot-followup:hover {
   background: var(--bg-soft);
   border-color: rgba(78, 139, 111, 0.28);
+  transform: translateY(-1px);
 }
 
 .chatbot-links {
@@ -735,33 +749,7 @@ a {
 .chatbot-links a:hover {
   text-decoration: underline;
 }
-.chatbot-followups {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 0 16px 16px;
-  background: rgba(255, 255, 255, 0.45);
-}
 
-.chatbot-followup {
-  padding: 8px 12px;
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  font-size: 0.92rem;
-  color: var(--ink);
-  cursor: pointer;
-  transition:
-    transform 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease;
-}
-
-.chatbot-followup:hover {
-  background: var(--bg-soft);
-  border-color: rgba(78, 139, 111, 0.28);
-  transform: translateY(-1px);
-}
 /* =========================
    14. KONTAKT
 ========================= */
