@@ -178,12 +178,14 @@ function scoreQuestion(q, item) {
 }
 
 function findBestAnswer(question) {
-  if (!window.chatbotKnowledgeBase) return null;
+  const kb = Array.isArray(window.chatbotKnowledgeBase)
+    ? window.chatbotKnowledgeBase
+    : [];
 
   let best = null;
   let bestScore = 0;
 
-  window.chatbotKnowledgeBase.forEach(item => {
+  kb.forEach(item => {
     const score = scoreQuestion(question, item);
 
     if (score > bestScore) {
