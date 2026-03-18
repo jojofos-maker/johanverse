@@ -276,6 +276,14 @@ a {
   background: rgba(255, 255, 255, 0.25);
 }
 
+.section-faq {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.chatbot-section {
+  background: rgba(255, 255, 255, 0.18);
+}
+
 /* =========================
    9. MIN REISE
 ========================= */
@@ -339,46 +347,8 @@ a {
 }
 
 /* =========================
-   10. GAMLE HISTORIEKORT / TIMELINE
-   (beholdes kun hvis de fortsatt brukes)
+   10. KORT / FELLESKOMPONENTER
 ========================= */
-
-.timeline {
-  margin: 26px 0 38px;
-  display: grid;
-  gap: 18px;
-}
-
-.timeline-item {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 18px;
-  align-items: start;
-}
-
-.timeline-year {
-  font-weight: 800;
-  color: var(--green);
-  padding-top: 12px;
-}
-
-.timeline-content {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  padding: 18px 20px;
-  box-shadow: 0 8px 24px rgba(24, 40, 59, 0.04);
-}
-
-.timeline-content h3 {
-  margin: 0 0 6px;
-  font-size: 1.08rem;
-}
-
-.timeline-content p {
-  margin: 0;
-  color: var(--muted);
-}
 
 .cards-grid,
 .results-grid,
@@ -594,10 +564,6 @@ a {
    13. CHATBOT
 ========================= */
 
-.chatbot-section {
-  background: rgba(255, 255, 255, 0.18);
-}
-
 .chatbot-card {
   max-width: 820px;
   margin: 0 auto;
@@ -638,14 +604,14 @@ a {
   font-size: 0.98rem;
 }
 
-.chatbot-message.bot {
+.chatbot-message--bot {
   background: rgba(78, 139, 111, 0.12);
   color: var(--ink);
   border: 1px solid rgba(78, 139, 111, 0.16);
   border-top-left-radius: 6px;
 }
 
-.chatbot-message.user {
+.chatbot-message--user {
   margin-left: auto;
   background: var(--ink);
   color: white;
@@ -687,8 +653,7 @@ a {
   cursor: pointer;
   transition:
     transform 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease;
+    background 0.18s ease;
 }
 
 .chatbot-input-row button:hover {
@@ -807,14 +772,14 @@ a {
   position: fixed;
   right: 24px;
   bottom: 24px;
-  display: none;
+  display: flex;
   align-items: flex-end;
   gap: 12px;
   z-index: 50;
 }
 
-.sticky-guide.visible {
-  display: flex;
+.sticky-guide.is-hidden {
+  display: none;
 }
 
 .sticky-guide-img {
@@ -835,7 +800,6 @@ a {
   font-size: 0.92rem;
   line-height: 1.4;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .guide-close {
@@ -873,7 +837,7 @@ a {
   z-index: 50;
 }
 
-.guide-open.visible {
+.guide-open.is-visible {
   display: block;
 }
 
@@ -906,7 +870,7 @@ a {
   will-change: opacity, transform;
 }
 
-.reveal.visible {
+.reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
@@ -970,15 +934,6 @@ a {
   .journey-item.reverse .journey-image,
   .journey-item.reverse .journey-copy {
     order: initial;
-  }
-
-  .timeline-item {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .timeline-year {
-    padding-top: 0;
   }
 
   .contact-box {
