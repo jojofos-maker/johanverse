@@ -212,3 +212,20 @@ insightSections.forEach((section) => {
   const el = document.getElementById(section.id);
   if (el) sectionObserver.observe(el);
 });
+/* =========================
+   FAQ INSIGHTS
+========================= */
+
+const faqItems = document.querySelectorAll(".faq-list details");
+
+faqItems.forEach((item) => {
+  item.addEventListener("toggle", () => {
+    if (!item.open) return;
+
+    const summary = item.querySelector("summary");
+    if (!summary) return;
+
+    const question = summary.textContent.trim();
+    trackCloudflareEvent(`FAQ: ${question}`);
+  });
+});
