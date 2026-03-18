@@ -1,291 +1,101 @@
 window.chatbotKnowledgeBase = [
+
   {
     id: "intro",
     title: "Om Johan",
-    keywords: ["hvem", "johan", "fossli", "bakgrunn", "profil", "fortell om johan"],
+    keywords: ["johan", "hvem", "profil"],
+    synonyms: ["fortell", "hvem er han", "hvem er johan", "person"],
     answer:
-      "Johan Jørgen Fossli bruker denne siden som en personlig kandidatprofil. Han presenteres som en erfaren leder og daglig leder med over 25 års erfaring fra ledelse, drift, strategi, organisasjonsutvikling og forretningsutvikling.",
+      "Johan Jørgen Fossli er en erfaren leder med over 25 års bakgrunn fra ledelse og drift.\n\nHan har jobbet både strategisk og operativt, og er kjent for å kombinere tydelig retning med gjennomføringsevne.\n\nDette er en side hvor han presenterer seg selv som kandidat.",
     followUps: [
-      "Hva slags erfaring har Johan?",
-      "Hvordan er Johan som leder?",
-      "Hva kan Johan bidra med?"
+      "Hva slags erfaring har han?",
+      "Hvordan er han som leder?",
+      "Hva kan han bidra med?"
     ]
   },
+
   {
     id: "experience",
     title: "Erfaring",
-    keywords: ["erfaring", "karriere", "arbeidserfaring", "toppleder", "ledererfaring", "bakgrunn"],
+    keywords: ["erfaring", "karriere"],
+    synonyms: ["jobbet", "arbeid", "cv", "bakgrunn", "historie"],
     answer:
-      "Johan har over 25 års erfaring som toppleder og operativ leder. Han har jobbet med strategi, drift, økonomi og organisasjon, og har erfaring med å bygge opp selskaper, skape vekst og lede virksomheter frem til salg og fusjon.",
+      "Johan har over 25 års erfaring som toppleder og operativ leder.\n\nHan har blant annet jobbet med:\n• strategi og forretningsutvikling\n• drift og økonomi\n• organisasjonsutvikling\n\nHan har erfaring med å bygge opp selskaper, snu virksomheter og skape vekst.",
     followUps: [
-      "Hva har Johan gjort i LiBiR?",
-      "Hva er de viktigste resultatene hans?",
-      "Hva kan Johan bidra med?"
+      "Hvilke resultater har han skapt?",
+      "Hva kan han bidra med?",
+      "Hvordan er han som leder?"
     ]
   },
-  {
-    id: "libir",
-    title: "LiBiR",
-    keywords: ["libir", "daglig leder", "renovasjon", "lillesand", "birkenes", "interkommunalt"],
-    answer:
-      "Johan var daglig leder i LiBiR IKS i 16 år. LiBiR er et interkommunalt renovasjonsselskap eid av Lillesand og Birkenes. I rollen hadde han helhetlig ansvar for strategi, drift, økonomi og organisasjon.",
-    followUps: [
-      "Hvilket ansvar hadde Johan?",
-      "Hva er de viktigste resultatene hans?",
-      "Hvordan er Johan som leder?"
-    ]
-  },
-  {
-    id: "responsibility",
-    title: "Ansvar",
-    keywords: ["ansvar", "strategi", "drift", "økonomi", "okonomi", "organisasjon", "helhetlig ansvar"],
-    answer:
-      "Johans ledererfaring spenner over strategi, daglig drift, økonomistyring og organisasjonsutvikling. Han har jobbet med både operativ gjennomføring og langsiktig utvikling.",
-    followUps: [
-      "Hva har Johan gjort i LiBiR?",
-      "Hva kan Johan bidra med?",
-      "Hvordan er Johan som leder?"
-    ]
-  },
+
   {
     id: "results",
     title: "Resultater",
-    keywords: ["resultat", "resultater", "gjennomføring", "prestasjoner", "meritter"],
+    keywords: ["resultater", "prestasjoner"],
+    synonyms: ["oppnådd", "skapt", "levert", "suksess", "case"],
     answer:
-      "Noen av resultatene som trekkes frem på siden er 16 år som daglig leder i LiBiR, 2× Gaselle knyttet til Miljøpartner Sør og Lindum Sør, og +50 % omsetningsvekst i Agder Miljø.",
+      "Gjennom karrieren har Johan levert solide resultater i flere virksomheter.\n\nEksempler inkluderer:\n• forbedret lønnsomhet\n• utviklet organisasjoner\n• gjennomført strategiske endringer\n\nHan er opptatt av målbare resultater – ikke bare planer.",
     followUps: [
-      "Hva betyr 2× Gaselle?",
-      "Hva gjorde Johan i Agder Miljø?",
-      "Hva har Johan gjort i LiBiR?"
+      "Hva slags erfaring har han?",
+      "Hva kan han bidra med?",
+      "Hvordan jobber han i praksis?"
     ]
   },
+
   {
-    id: "gaselle",
-    title: "Gaselle",
-    keywords: ["gaselle", "gasellepris", "gaselleutmerkelse", "deloitte gaselle", "lindum sør 2019"],
-    answer:
-      "Gaselle-resultatet på siden er knyttet til Miljøpartner Sør og Lindum Sør. Gaselle-diplomet som vises gjelder Lindum Sør i 2019.",
-    followUps: [
-      "Hva er de viktigste resultatene hans?",
-      "Hva gjorde Johan i Agder Miljø?",
-      "Hva slags erfaring har Johan?"
-    ]
-  },
-  {
-    id: "agder-miljo",
-    title: "Agder Miljø",
-    keywords: ["agder miljø", "agder miljo", "biokull", "miljøløsninger", "miljoløsninger"],
-    answer:
-      "I Agder Miljø jobbet Johan med biokull og nye miljøløsninger. Det beskrives som en krevende, lærerik og fremtidsrettet fase som også ga tydelige kommersielle resultater, blant annet +50 % omsetningsvekst i en oppbyggingsfase.",
-    followUps: [
-      "Hva er de viktigste resultatene hans?",
-      "Hvordan jobber Johan med teknologi?",
-      "Hva kan Johan bidra med?"
-    ]
-  },
-  {
-    id: "company-building",
-    title: "Selskapsbygging",
-    keywords: ["bygget opp", "selskapsbygging", "bygge selskap", "entreprenørskap", "nye selskaper", "nye satsinger"],
-    answer:
-      "Johan har erfaring med å bygge opp selskaper og utvikle nye satsinger. På siden trekkes det særlig frem arbeid med Miljøpartner Sør og videre utvikling frem mot Lindum Sør.",
-    followUps: [
-      "Hva betyr 2× Gaselle?",
-      "Hva er de viktigste resultatene hans?",
-      "Hva slags erfaring har Johan?"
-    ]
-  },
-  {
-    id: "sale-fusion",
-    title: "Salg og fusjon",
-    keywords: ["salg", "fusjon", "ledet frem til salg", "ledet frem til fusjon", "transaksjon"],
-    answer:
-      "Johan har erfaring med å bygge opp virksomheter, skape vekst og lede utvikling frem til salg og fusjon. Dette løftes særlig frem i beskrivelsen av Miljøpartner Sør og Lindum Sør.",
-    followUps: [
-      "Hva er de viktigste resultatene hans?",
-      "Hva slags erfaring har Johan?",
-      "Hva kan Johan bidra med?"
-    ]
-  },
-  {
-    id: "leadership",
+    id: "leader",
     title: "Lederstil",
-    keywords: ["leder", "lederstil", "ledelse", "filosofi", "mennesker", "kultur", "kriser"],
+    keywords: ["leder", "lederstil"],
+    synonyms: ["sjef", "ledertype", "hvordan er han", "personlighet"],
     answer:
-      "Johan beskrives som en operativ og menneskeorientert leder. Han liker å være tett på organisasjonen, skape retning, bygge kultur og få resultater gjennom andre. Han er opptatt av ro, struktur, tydelig kommunikasjon og å la andre skinne.",
+      "Johan beskrives som en tydelig og inkluderende leder.\n\nHan:\n• setter retning og forventninger\n• bygger team og kultur\n• følger opp og skaper fremdrift\n\nHan kombinerer struktur og relasjon – og får folk med seg.",
     followUps: [
-      "Hvordan håndterer Johan kriser?",
-      "Hva gjør Johan de første 90 dagene?",
-      "Hva kan Johan bidra med?"
+      "Hva kan han bidra med?",
+      "Hva slags erfaring har han?",
+      "Hvordan jobber han i praksis?"
     ]
   },
+
   {
-    id: "crisis",
-    title: "Kriseledelse",
-    keywords: ["krise", "kriser", "kriseledelse", "håndterer du kriser", "hvordan håndterer"],
+    id: "value",
+    title: "Hva han kan bidra med",
+    keywords: ["bidra", "verdi"],
+    synonyms: ["styrker", "kompetanse", "hva kan han gjøre", "hva får vi"],
     answer:
-      "Når det blir krevende, beskrives Johan som rolig og strukturert. Han legger vekt på å skaffe oversikt, prioritere tydelig og gjennomføre med klar kommunikasjon.",
+      "Johan kan bidra med både strategisk retning og operativ gjennomføring.\n\nTypisk bidrag:\n• struktur og tydelig ledelse\n• forbedring av drift og lønnsomhet\n• utvikling av organisasjon og kultur\n\nHan går raskt inn i situasjoner og skaper fremdrift.",
     followUps: [
-      "Hvordan er Johan som leder?",
-      "Hva gjør Johan de første 90 dagene?",
-      "Hva kan Johan bidra med?"
+      "Hva slags erfaring har han?",
+      "Hvordan er han som leder?",
+      "Hvilke resultater har han skapt?"
     ]
   },
-  {
-    id: "first90",
-    title: "Første 90 dager",
-    keywords: ["90", "første 90", "ny rolle", "første dager", "første 100 dager"],
-    answer:
-      "I en ny rolle vil Johan først lytte, analysere, bygge relasjoner og etablere tydelig retning før større grep tas.",
-    followUps: [
-      "Hvordan er Johan som leder?",
-      "Hva kan Johan bidra med?",
-      "Hva slags erfaring har Johan?"
-    ]
-  },
-  {
-    id: "technology",
-    title: "Teknologi",
-    keywords: ["teknologi", "digital", "ai", "systemer", "digitalisering"],
-    answer:
-      "Johan jobber praktisk og nysgjerrig med teknologi. Tilnærmingen hans er at teknologi skal brukes til å forbedre drift, beslutninger og arbeidsflyt – ikke som et mål i seg selv.",
-    followUps: [
-      "Hva kan Johan bidra med?",
-      "Hva slags erfaring har Johan?",
-      "Hva gjorde Johan i Agder Miljø?"
-    ]
-  },
-  {
-    id: "contribution",
-    title: "Bidrag",
-    keywords: ["bidra", "hva kan du bidra med", "styrker", "hva tilfører", "verdi"],
-    answer:
-      "Johan løfter særlig frem evnen til å skape retning, bygge struktur, utvikle organisasjoner, drive forretningsutvikling og gjøre strategi om til handling.",
-    followUps: [
-      "Hvordan er Johan som leder?",
-      "Hva slags erfaring har Johan?",
-      "Hva gjør Johan de første 90 dagene?"
-    ]
-  },
-  {
-    id: "cv",
-    title: "CV",
-    keywords: ["cv", "resume", "pdf", "kort cv", "full cv", "last ned cv"],
-    answer:
-      "Du finner både kort CV og full CV som PDF på siden. Lenker ligger både i chatbot-seksjonen og i kontaktseksjonen.",
-    followUps: [
-      "Hva slags erfaring har Johan?",
-      "Hva er de viktigste resultatene hans?",
-      "Hvordan kan jeg kontakte Johan?"
-    ]
-  },
+
   {
     id: "contact",
     title: "Kontakt",
-    keywords: ["kontakt", "e-post", "epost", "telefon", "linkedin", "intervju", "ta kontakt"],
+    keywords: ["kontakt", "nå", "epost", "telefon"],
+    synonyms: ["ta kontakt", "snakke", "mail", "ringe"],
     answer:
-      "Du kan ta kontakt via kontaktseksjonen på siden, på e-post, telefon eller LinkedIn. Målet med siden er å gjøre det enkelt å invitere Johan til en prat eller et intervju.",
+      "Du kan enkelt ta kontakt med Johan via kontaktskjemaet på siden.\n\nDer finner du også lenker til:\n• CV (kort og full versjon)\n• kontaktinformasjon\n\nHan er åpen for dialog om relevante muligheter.",
     followUps: [
-      "Hvor finner jeg CV-en?",
-      "Hva kan Johan bidra med?",
-      "Hvordan er Johan som leder?"
+      "Kan jeg se CV-en hans?",
+      "Hva kan han bidra med?",
+      "Hva slags erfaring har han?"
+    ]
+  },
+
+  {
+    id: "cv",
+    title: "CV",
+    keywords: ["cv"],
+    synonyms: ["resume", "erfaring pdf", "last ned cv"],
+    answer:
+      "Du finner CV-en til Johan på siden.\n\nDer kan du velge mellom:\n• en kort versjon\n• en fullstendig versjon\n\nBegge gir en god oversikt over erfaring og kompetanse.",
+    followUps: [
+      "Hva slags erfaring har han?",
+      "Hva kan han bidra med?",
+      "Hvordan er han som leder?"
     ]
   }
-  ,
-  {
-    id: "upbringing",
-    title: "Oppvekst",
-    keywords: ["oppvekst", "lillesand", "barndom", "sorlandet", "sørlandet", "hvor kommer johan fra"],
-    answer:
-      "Johan er født og oppvokst i Lillesand. Han beskriver oppveksten som viktig for å forme nysgjerrighet, arbeidsvilje og gleden av å få ting til sammen med andre.",
-    followUps: [
-      "Hva slags erfaring har Johan?",
-      "Hvordan er Johan som leder?",
-      "Hva har formet Johan som leder?"
-    ]
-  },
-  {
-    id: "explorer-phase",
-    title: "Utforskerfasen",
-    keywords: ["bodo", "bodø", "porsgrunn", "oslo", "utforskerfasen", "luftforsvaret", "bi", "vesta", "if", "bredbandsfabrikken", "bredbåndsfabrikken", "viken"],
-    answer:
-      "Johan beskriver årene i Bodø, Porsgrunn og Oslo som en viktig utforskerfase. Førstegangstjeneste i Luftforsvaret, studier på BI og jobber i blant annet Vesta, If, Bredbåndsfabrikken og Viken ga nye perspektiver og gjorde ham tryggere på hva slags leder han ønsket å bli.",
-    followUps: [
-      "Hva slags erfaring har Johan?",
-      "Hva har formet Johan som leder?",
-      "Hvordan er Johan som leder?"
-    ]
-  },
-  {
-    id: "early-career",
-    title: "Tidlige jobber",
-    keywords: ["adecco", "wurth", "würth", "destinasjon sørlandet", "de forste jobbene", "de første jobbene", "salg", "bemanning", "turistsjef", "salgssjef"],
-    answer:
-      "Tidlig i karrieren jobbet Johan med salg, bemanning og kundearbeid hos blant annet Adecco, Würth og Destinasjon Sørlandet. Han trekker frem at dette lærte ham mye om relasjoner, service og forretning.",
-    followUps: [
-      "Hva slags erfaring har Johan?",
-      "Hvordan er Johan som leder?",
-      "Hva kan Johan bidra med?"
-    ]
-  },
-  {
-    id: "miljopartner",
-    title: "Miljøpartner Sør",
-    keywords: ["miljopartner sør", "miljøpartner sør", "miljopartner", "miljøpartner"],
-    answer:
-      "Miljøpartner Sør trekkes frem som en viktig del av Johans erfaring med selskapsbygging. Han var med på å bygge opp virksomheten til en sterk aktør, før videre utvikling mot Lindum Sør.",
-    followUps: [
-      "Hva betyr 2× Gaselle?",
-      "Hva menes med salg og fusjon?",
-      "Hva er de viktigste resultatene hans?"
-    ]
-  },
-  {
-    id: "lindum-sor",
-    title: "Lindum Sør",
-    keywords: ["lindum sør", "lindum", "fusjon", "gaselle 2019"],
-    answer:
-      "Lindum Sør er en viktig del av historien om vekst og videreutvikling i Johans karriere. Gaselle-diplomet som vises på siden gjelder Lindum Sør i 2019.",
-    followUps: [
-      "Hva betyr 2× Gaselle?",
-      "Hva menes med salg og fusjon?",
-      "Hva er de viktigste resultatene hans?"
-    ]
-  },
-  {
-    id: "leadership-values",
-    title: "Verdier i ledelse",
-    keywords: ["verdier", "verdigrunnlag", "lederverdier", "hva star johan for", "hva står johan for", "lederskapsfilosofi"],
-    answer:
-      "Johan løfter særlig frem mennesker, kultur, tydelighet og gjennomføring. Han tror på å være tett på organisasjonen, skape retning og få andre til å lykkes.",
-    followUps: [
-      "Hvordan er Johan som leder?",
-      "Hvordan håndterer Johan kriser?",
-      "Hva kan Johan bidra med?"
-    ]
-  },
-  {
-    id: "why-johan",
-    title: "Hvorfor Johan",
-    keywords: ["hvorfor johan", "hvorfor ansette johan", "hvorfor velge johan", "hvorfor skal vi velge johan"],
-    answer:
-      "Det som særlig kjennetegner Johan er kombinasjonen av lang ledererfaring, operativ gjennomføringsevne og erfaring med å bygge og utvikle virksomheter. Han kombinerer strategi, drift, økonomi og organisasjon med en tydelig menneskelig lederstil.",
-    followUps: [
-      "Hva kan Johan bidra med?",
-      "Hva slags erfaring har Johan?",
-      "Hva er de viktigste resultatene hans?"
-    ]
-  },
-  {
-    id: "what-shaped-him",
-    title: "Hva har formet Johan",
-    keywords: ["hva har formet johan", "hva har preget johan", "hvordan ble johan leder", "formet som leder"],
-    answer:
-      "Både oppveksten i Lillesand, årene utenfor Sørlandet og erfaringene fra tidlige jobber har vært med på å forme Johan. Han trekker særlig frem nysgjerrighet, arbeidsvilje, relasjoner og praktisk erfaring som viktige byggesteiner.",
-    followUps: [
-      "Hvordan er Johan som leder?",
-      "Hva slags erfaring har Johan?",
-      "Hvor kommer Johan fra?"
-    ]
-  }
+
 ];
