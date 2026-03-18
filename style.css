@@ -613,8 +613,8 @@ a {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 12px 16px 16px;
-  background: rgba(255, 255, 255, 0.45);
+  padding: 0;
+  background: transparent;
 }
 
 .chat-suggestion {
@@ -688,7 +688,24 @@ a {
 .chatbot-links a:hover {
   text-decoration: underline;
 }
+.chatbot-suggestion-groups {
+  padding: 12px 16px 16px;
+  background: rgba(255, 255, 255, 0.45);
+  border-top: 1px solid rgba(24, 40, 59, 0.04);
+}
 
+.chatbot-suggestion-block + .chatbot-suggestion-block {
+  margin-top: 12px;
+}
+
+.chatbot-suggestion-label {
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 /* =========================
    13. KONTAKT
 ========================= */
