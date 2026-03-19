@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
       avatarWrap.className = "jj-av";
 
       const avatarImg = document.createElement("img");
-      avatarImg.src = "assets/johan-cartoon.png";
+      avatarImg.src = "maskot.jpeg";
       avatarImg.alt = "Johan";
 
       avatarWrap.appendChild(avatarImg);
