@@ -653,14 +653,18 @@ a {
 }
 
 .jj-bubble {
-  max-width: min(560px, calc(100% - 52px));
+  max-width: min(620px, calc(100% - 52px));
   background: #f7f7f8;
   border: 1px solid rgba(24, 40, 59, 0.08);
   border-radius: 18px;
-  padding: 1rem 1.1rem;
-  line-height: 1.6;
+  padding: 1rem 1.25rem;
+  line-height: 1.65;
   color: var(--ink);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  text-align: left;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .jj-msg.bot .jj-bubble {
@@ -1159,4 +1163,12 @@ a {
 
 .jj-bubble p + p {
   margin-top: 0.75rem;
+}
+.jj-bubble,
+.jj-bubble p,
+.jj-bubble span {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-align: left;
 }
