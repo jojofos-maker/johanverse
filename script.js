@@ -23,8 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const stickyGuide = document.getElementById("stickyGuide");
   const guideClose = document.getElementById("guideClose");
   const guideOpen = document.getElementById("guideOpen");
-   const chatbotSection = document.getElementById("chatbot");
-const chatbotInput = document.getElementById("chatbotInput");
+  const chatbotSection = document.getElementById("chatbot");
 
   if (guideClose && stickyGuide) {
     guideClose.addEventListener("click", () => {
@@ -39,14 +38,31 @@ const chatbotInput = document.getElementById("chatbotInput");
       trackCloudflareEvent("sticky_opened");
     });
   }
-if (stickyGuide) {
-  stickyGuide.addEventListener("click", (event) => {
-    const clickedClose = event.target.closest("#guideClose");
-    if (clickedClose) return;
 
-    openChatbotFromGuide();
-  });
-}
+  if (stickyGuide) {
+    stickyGuide.addEventListener("click", (event) => {
+      const clickedClose = event.target.closest("#guideClose");
+      if (clickedClose) return;
+      openChatbotFromGuide();
+    });
+  }
+
+  function openChatbotFromGuide() {
+    if (chatbotSection) {
+      chatbotSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    setTimeout(() => {
+      const chatInput = document.getElementById("jj-input");
+      if (chatInput) chatInput.focus();
+    }, 500);
+
+    trackCloudflareEvent("sticky_guide_to_chatbot");
+  }
+
   /* =========================
      SMOOTH SCROLL
   ========================== */
@@ -105,22 +121,7 @@ if (stickyGuide) {
 
     sections.forEach(sec => observer.observe(sec));
   }
-function openChatbotFromGuide() {
-  if (chatbotSection) {
-    chatbotSection.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
 
-  setTimeout(() => {
-    if (chatbotInput) {
-      chatbotInput.focus();
-    }
-  }, 500);
-
-  trackCloudflareEvent("sticky_guide_to_chatbot");
-}
   /* =========================
      FAQ TRACKING
   ========================== */
@@ -132,152 +133,5 @@ function openChatbotFromGuide() {
       }
     });
   });
-
-/* =========================
-   CHATBOT
-========================= */
-
-const messagesEl = document.getElementById("chatbotMessages");
-const form = document.getElementById("chatbotForm");
-const input = document.getElementById("chatbotInput");
-const followUpsEl = document.getElementById("chatbotFollowUps");
-const dynamicFollowUpsBlock = document.getElementById("chatbotDynamicBlock");
-
-if (!messagesEl || !form || !input) {
-  console.error("Chatbot init stoppet:", {
-    messagesEl,
-    form,
-    input,
-    followUpsEl
-  });
-  return;
-}
-
-let lastAnswerId = null;
-
-function addMessage(text, sender = "bot") {
-  const msg = document.createElement("div");
-  msg.className = "chatbot-message " + sender;
-  msg.textContent = text;
-  messagesEl.appendChild(msg);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-}
-
-function scoreQuestion(q, item) {
-  let score = 0;
-  const text = q.toLowerCase();
-
-  item.keywords?.forEach(k => {
-    if (text.includes(k.toLowerCase())) score += 2;
-  });
-
-  item.synonyms?.forEach(s => {
-    if (text.includes(s.toLowerCase())) score += 1;
-  });
-
-  return score;
-}
-
-function findBestAnswer(question) {
-  const kb = Array.isArray(window.chatbotKnowledgeBase)
-    ? window.chatbotKnowledgeBase
-    : [];
-
-  let best = null;
-  let bestScore = 0;
-
-  kb.forEach(item => {
-    const score = scoreQuestion(question, item);
-
-    if (score > bestScore) {
-      bestScore = score;
-      best = item;
-    }
-  });
-
-  return bestScore > 0 ? best : null;
-}
-
-function showFollowUps(list) {
-  if (!followUpsEl) return;
-
-  followUpsEl.innerHTML = "";
-
-  if (!list || !list.length) {
-    if (dynamicFollowUpsBlock) {
-      dynamicFollowUpsBlock.hidden = true;
-    }
-    return;
-  }
-
-  if (dynamicFollowUpsBlock) {
-    dynamicFollowUpsBlock.hidden = false;
-  }
-
-  list.slice(0, 4).forEach(q => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "chat-suggestion";
-    btn.textContent = q;
-    btn.dataset.question = q;
-
-    btn.addEventListener("click", () => {
-      askQuestion(q);
-    });
-
-    followUpsEl.appendChild(btn);
-  });
-}
-
-function askQuestion(question) {
-  const cleanQuestion = question.trim();
-  if (!cleanQuestion) return;
-
-  addMessage(cleanQuestion, "user");
-
-  const answer = findBestAnswer(cleanQuestion);
-
-  if (answer) {
-    addMessage(answer.answer, "bot");
-
-    if (answer.id !== lastAnswerId) {
-      showFollowUps(answer.followUps);
-      lastAnswerId = answer.id;
-    }
-  } else {
-    addMessage(
-      "Godt spørsmål — det bør jeg kunne svare bedre på. Prøv å spørre om erfaring, lederstil eller hva Johan kan bidra med.",
-      "bot"
-    );
-
-    showFollowUps([
-      "Hvem er Johan?",
-      "Hva slags erfaring har du?",
-      "Hva slags leder er du?",
-      "Hva kan du bidra med?"
-    ]);
-  }
-
-  trackCloudflareEvent("chat_question");
-  input.value = "";
-}
-
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  askQuestion(input.value);
-});
-
-/* =========================
-   SUGGESTION KNAPPER
-========================= */
-
-document.querySelectorAll(".chat-suggestion").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const q = btn.dataset.question || btn.textContent;
-    if (!q) return;
-
-    askQuestion(q);
-  });
-});
 
 });
