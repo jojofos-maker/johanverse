@@ -653,20 +653,22 @@ a {
 }
 
 .jj-bubble {
-  max-width: min(620px, calc(100% - 52px));
+  max-width: 560px;
   background: #f7f7f8;
   border: 1px solid rgba(24, 40, 59, 0.08);
   border-radius: 18px;
   padding: 1rem 1.25rem;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--ink);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
   text-align: left;
   white-space: normal;
-  word-break: normal;
-  overflow-wrap: break-word;
+  word-break: keep-all;
+  overflow-wrap: normal;
 }
-
+.jj-msg.bot .jj-bubble {
+  width: auto;
+}
 .jj-msg.bot .jj-bubble {
   background: rgba(255, 255, 255, 0.92);
   color: var(--ink);
@@ -1138,19 +1140,7 @@ a {
     max-width: 92%;
   }
 }
-/* =========================
-   JJ CHAT – CARD
-========================= */
 
-#jj-chat {
-  background: var(--card);
-  border-radius: 20px;
-  padding: 1.25rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  border: 1px solid var(--line);
-  max-width: 720px;
-  margin: 0 auto;
-}
 #jj-messages img {
   max-height: 260px;
   width: 100%;
@@ -1171,4 +1161,5 @@ a {
   font-weight: 400;
   letter-spacing: 0;
   text-align: left;
+  line-height: 1.7;
 }
