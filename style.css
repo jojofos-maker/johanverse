@@ -1153,3 +1153,9 @@ a {
   max-width: 720px;
   margin: 0 auto;
 }
+#jj-messages img {
+  max-height: 260px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
