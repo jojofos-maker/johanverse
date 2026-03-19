@@ -630,7 +630,8 @@ a {
 .jj-msg {
   display: flex;
   align-items: flex-end;
-  gap: 10px;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .jj-msg.user {
@@ -638,19 +639,11 @@ a {
 }
 
 .jj-av {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(24, 40, 59, 0.08);
-  color: var(--ink);
-  font-size: 0.78rem;
-  font-weight: 700;
-  border: 1px solid rgba(24, 40, 59, 0.08);
+  flex: 0 0 36px;
+  object-fit: cover;
 }
 
 .jj-av img {
@@ -660,13 +653,14 @@ a {
 }
 
 .jj-bubble {
-  max-width: min(78%, 560px);
-  padding: 14px 16px;
+  max-width: min(560px, calc(100% - 52px));
+  background: #f7f7f8;
+  border: 1px solid rgba(24, 40, 59, 0.08);
   border-radius: 18px;
+  padding: 1rem 1.1rem;
   line-height: 1.6;
-  font-size: 0.97rem;
-  white-space: pre-wrap;
-  word-break: break-word;
+  color: var(--ink);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
 }
 
 .jj-msg.bot .jj-bubble {
@@ -1158,4 +1152,11 @@ a {
   width: 100%;
   object-fit: cover;
   border-radius: 12px;
+}
+.jj-bubble p {
+  margin: 0;
+}
+
+.jj-bubble p + p {
+  margin-top: 0.75rem;
 }
